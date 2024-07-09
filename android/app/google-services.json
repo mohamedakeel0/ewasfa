@@ -1,0 +1,199 @@
+{
+  "project_info": {
+    "project_number": "871094126702",
+    "firebase_url": "https://easy-1rx-cbc31.firebaseio.com",
+    "project_id": "easy-1rx-cbc31",
+    "storage_bucket": "easy-1rx-cbc31.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871094126702:android:42d34f352723c16a147e7f",
+        "android_client_info": {
+          "package_name": "com.codecaique.easy1Rx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "871094126702-455ta0qrkbcafmgtmh976tt949k79q0h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.codecaique.easy1Rx",
+            "certificate_hash": "f45fb55c0bfeae7120769c115894dd87c96ff6a5"
+          }
+        },
+        {
+          "client_id": "871094126702-5iftmnb7sc8sgbmj0dn3dss2vagirgvg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.codecaique.easy1Rx",
+            "certificate_hash": "135d8ac6b861a683811285d3d7e446d10c015956"
+          }
+        },
+        {
+          "client_id": "871094126702-f4sp9c59fj6s3fir5p2uctpu8qcg1iu5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.codecaique.easy1Rx",
+            "certificate_hash": "6a66080d3672a187ac0ef7a198335a3f78b7ac1e"
+          }
+        },
+        {
+          "client_id": "871094126702-kmp7r3pt90g1hr2dj7g33n8ie62v8g0h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.codecaique.easy1Rx",
+            "certificate_hash": "8ffc983758be43ae8575290658cc14be12d6614c"
+          }
+        },
+        {
+          "client_id": "871094126702-9ei3hrq376srshr2dsrh9i0nmn66aq2n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0ild7CWSnI634c32YkfbvKXxXhvDoOTA"
+        },
+        {
+          "current_key": "AIzaSyBFeb6ojTHHz75VAo6qroCM4V7S6VLJzyY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "871094126702-3ogsti1456h6gb69lqdtoo0h80hb64t1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "871094126702-0tc49r20lor73dd9r74m6jd9ldpt1efn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ewasfa"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871094126702:android:8b7da06095266c1d147e7f",
+        "android_client_info": {
+          "package_name": "com.codecaique.easy1rx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "871094126702-9ei3hrq376srshr2dsrh9i0nmn66aq2n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0ild7CWSnI634c32YkfbvKXxXhvDoOTA"
+        },
+        {
+          "current_key": "AIzaSyBFeb6ojTHHz75VAo6qroCM4V7S6VLJzyY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "871094126702-3ogsti1456h6gb69lqdtoo0h80hb64t1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "871094126702-0tc49r20lor73dd9r74m6jd9ldpt1efn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ewasfa"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871094126702:android:1ccceb7738d6aa4b147e7f",
+        "android_client_info": {
+          "package_name": "com.codecaique.easy_1rx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "871094126702-9ei3hrq376srshr2dsrh9i0nmn66aq2n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0ild7CWSnI634c32YkfbvKXxXhvDoOTA"
+        },
+        {
+          "current_key": "AIzaSyBFeb6ojTHHz75VAo6qroCM4V7S6VLJzyY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "871094126702-3ogsti1456h6gb69lqdtoo0h80hb64t1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "871094126702-0tc49r20lor73dd9r74m6jd9ldpt1efn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ewasfa"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871094126702:android:b28a352c7492f344147e7f",
+        "android_client_info": {
+          "package_name": "com.ewasfa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "871094126702-9ei3hrq376srshr2dsrh9i0nmn66aq2n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0ild7CWSnI634c32YkfbvKXxXhvDoOTA"
+        },
+        {
+          "current_key": "AIzaSyBFeb6ojTHHz75VAo6qroCM4V7S6VLJzyY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "871094126702-3ogsti1456h6gb69lqdtoo0h80hb64t1.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "871094126702-0tc49r20lor73dd9r74m6jd9ldpt1efn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ewasfa"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

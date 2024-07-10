@@ -115,8 +115,8 @@ void main() async {
     return value;
   }).then((value) async {
     LocationHelper.getPermissionState();
-      final RemoteMessage? remoteMessage =
-      await FirebaseMessaging.instance.getInitialMessage();
+    final RemoteMessage? remoteMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
   });
   SharedPreferences prefs = await SharedPreferences.getInstance();
   Language language = prefs.containsKey('language')
@@ -189,7 +189,9 @@ Future<void> showNotification(RemoteMessage message) async {
 
 class MyApp extends StatelessWidget {
   final Language language;
+
   const MyApp({super.key, required this.language});
+
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -198,24 +200,27 @@ class MyApp extends StatelessWidget {
         splitScreenMode: true,
         useInheritedMediaQuery: true,
         builder: (context, child) {
-        return const MaterialApp(debugShowCheckedModeBanner: false,
-          title: appName,
-          home: MyHomePage(),
-        );
-      }
-    );
+          return const MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: appName,
+            home: MyHomePage(),
+          );
+        });
   }
 }
 
 class MyHomePage extends StatefulWidget {
   static const String routeName = '/myHome';
+
   const MyHomePage({super.key});
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedPageIndex = 0;
+
   void _selectPage(int index) {
     setState(() {
       _selectedPageIndex = index;
@@ -267,7 +272,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           languageProvider.currentLanguage == Language.arabic
                               ? const Locale('ar')
                               : const Locale('en'),
-                      child: MaterialApp(  debugShowCheckedModeBanner: false,
+                      child: MaterialApp(
+                          debugShowCheckedModeBanner: false,
                           locale: languageProvider.currentLanguage ==
                                   Language.arabic
                               ? const Locale('ar')
@@ -285,7 +291,6 @@ class _MyHomePageState extends State<MyHomePage> {
                           theme: Provider.of<AppTheme>(ctx)
                               .currentTheme
                               .copyWith(
-
                                   pageTransitionsTheme: PageTransitionsTheme(
                                     builders: {
                                       TargetPlatform.android:

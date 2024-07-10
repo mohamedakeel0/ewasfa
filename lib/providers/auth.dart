@@ -267,7 +267,7 @@ class Auth with ChangeNotifier {
   Future<bool> tryAutoLogin(BuildContext ctx) async {
     final prefs = await SharedPreferences.getInstance();
     if (!prefs!.containsKey('userData')) {
-      logger.d('Auth: SharedPreferences has no userdata');
+
       return false;
     }
     final extractedUserData =

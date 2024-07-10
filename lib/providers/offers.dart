@@ -76,7 +76,7 @@ class Offers with ChangeNotifier {
               typeisPharmacy: (map['type'] == 'p') ? true : false));
         }
         offers = loadedOffers;
-        logger.d("Retrieved ${offers.length} offers");
+
       }
       offersLoaded = true;
       notifyListeners();

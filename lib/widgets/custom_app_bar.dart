@@ -41,7 +41,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 pageTitle,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              actions: [
+              actions:actions==null? []:[
                 ...?actions,
                 PopupMenuButton(
                   icon: Icon(Icons.more_vert,

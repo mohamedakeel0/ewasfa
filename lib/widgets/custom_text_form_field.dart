@@ -26,11 +26,13 @@ class CustomTextFormField extends StatelessWidget {
     this.enabledBorder,
     this.enabled,
     this.context,
+    this.cursorColor,
   });
 
   final TextEditingController? controller;
   final String? hintText;
   final String? labelText;
+  final   Color? cursorColor;
   final Widget? suffixIcon;
   final Widget? prefixIcon;
   final bool obscureText;
@@ -52,7 +54,7 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return //Directionality(textDirection: TextDirection.ltr,
-        TextFormField(
+        TextFormField(  cursorColor:cursorColor,
           obscuringCharacter: '●',
       focusNode: focusNode,
       controller: controller,

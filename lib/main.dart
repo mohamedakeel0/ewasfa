@@ -14,6 +14,7 @@ import 'package:ewasfa/screens/home_screen.dart';
 import 'package:ewasfa/screens/my_profile_screen.dart';
 import 'package:ewasfa/screens/order/place_order_screen.dart';
 import 'package:ewasfa/screens/order_history_screen.dart';
+import 'package:ewasfa/screens/splash_auth_screen.dart';
 import 'package:ewasfa/widgets/check_internet_connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -419,7 +420,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       authResultSnapshot.connectionState ==
                                               ConnectionState.waiting
                                           ? SplashScreen()
-                                          : AuthScreen(),
+                                          : SplashAuthScreen(),
                                 )),
                     ))));
   }

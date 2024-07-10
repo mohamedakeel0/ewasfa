@@ -17,6 +17,9 @@ import 'package:flutter/foundation.dart';
 @Category(<String>['Screens'])
 @Summary('The Screen through which the user can login or signup')
 class AuthCard extends StatefulWidget {
+  late AuthMode authMode;
+  AuthCard(this.authMode);
+
   @override
   _AuthCardState createState() => _AuthCardState();
 }
@@ -44,14 +47,16 @@ class _AuthCardState extends State<AuthCard>
   late Animation<double> _opacityAnimation;
   late AuthMode _authMode;
   var isVisibility = true;
+  var isVisibility2 = true;
   var visibilityIcon = Icons.visibility_outlined;
+  var visibilityIcon2 = Icons.visibility_outlined;
   bool _rememberMe = false;
   var logger = Logger();
 
   @override
   void initState() {
     super.initState();
-    _authMode = AuthMode.login;
+    _authMode =widget.authMode;
 
     _controller = AnimationController(
       vsync: this,
@@ -131,6 +136,7 @@ class _AuthCardState extends State<AuthCard>
         );
       }
       logger.d(resp);
+
       if (resp != 0) {
         var errorMessage = AppLocalizations.of(ctx)?.authenticationFailedError;
         if (resp == 1) {
@@ -181,6 +187,11 @@ class _AuthCardState extends State<AuthCard>
     isVisibility = !isVisibility;
 
     visibilityIcon =
+        isVisibility ? Icons.visibility_outlined : Icons.visibility_off;
+  } void changePasswordVisibility2() {
+    isVisibility2 = !isVisibility2;
+
+    visibilityIcon2 =
         isVisibility ? Icons.visibility_outlined : Icons.visibility_off;
   }
 
@@ -330,7 +341,7 @@ class _AuthCardState extends State<AuthCard>
                   //   ),
                   // ),
                   Padding(
-                    padding: EdgeInsets.only(top: 20.0.h),
+                    padding: EdgeInsets.only(top:_authMode == AuthMode.signUp ? 15.0.h:0.0),
                     child: AnimatedContainer(
                       constraints: BoxConstraints(
                         minHeight: _authMode == AuthMode.signUp ? 60 : 0,
@@ -342,12 +353,22 @@ class _AuthCardState extends State<AuthCard>
                         opacity: _opacityAnimation,
                         child: SlideTransition(
                           position: _slideAnimation,
-                          child: CustomTextFormField(
+                          child: CustomTextFormField(controller: _passwordController,
                             enabledBorder: InputBorder.none,
-                            obscureText: true,
+                            obscureText: isVisibility2,
+                            suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    changePasswordVisibility2();
+                                  });
+                                },
+                                icon: Icon(
+                                  visibilityIcon2,
+                                  color: Colors.grey,
+                                )),
                             enabled: _authMode == AuthMode.signUp,
                             onSaved: (value) {
-                              _authData['email'] = value!;
+                              _authData['password'] = value!;
                             },
                             validator: _authMode == AuthMode.signUp
                                 ? (value) {
@@ -361,6 +382,7 @@ class _AuthCardState extends State<AuthCard>
                             hintText: AppLocalizations.of(context)
                                 ?.confirm_password_label,
                             textInputType: TextInputType.emailAddress,
+
                             textInputAction: TextInputAction.next,
                             textCapitalization: TextCapitalization.words,
                           ),
@@ -374,7 +396,7 @@ class _AuthCardState extends State<AuthCard>
                         colors: [primarySwatch])
                   else
                     Padding(
-                      padding: EdgeInsets.only(top: 20.0.h,right: 10.w,left: 10.w,),
+                      padding: EdgeInsets.only(top:_authMode == AuthMode.login? 30.0.h:15.0,right: 10.w,left: 10.w,),
                       child: GestureDetector(
                         onTap: () {
                           _submit(context);
@@ -383,7 +405,7 @@ class _AuthCardState extends State<AuthCard>
                           height: 60.h,
                           width: MediaQuery.of(context).size.width - 70,
                           decoration: BoxDecoration(
-                              color: Colors.yellow.shade100,
+                              color:_passwordController.text.trim().isEmpty?Colors.yellow.shade100:Colors.black87 ,
                               border:
                                   Border.all(color: Colors.black, width: 3)),
                           child: Center(
@@ -399,7 +421,7 @@ class _AuthCardState extends State<AuthCard>
                                       .textTheme
                                       .bodyMedium
                                       ?.copyWith(
-                                          color: Colors.black,
+                                          color:_passwordController.text.trim().isEmpty? Colors.black:Colors.white,
                                           fontWeight: FontWeight.w600,
                                           fontSize: 17.sp)),
                             ),
@@ -439,7 +461,7 @@ class _AuthCardState extends State<AuthCard>
                             )
                           : null),
                   Padding(
-                    padding:  EdgeInsets.symmetric(horizontal:50.w,vertical: 30.h),
+                    padding:  EdgeInsets.symmetric(horizontal:30.w,vertical: 30.h),
                     child: Row(crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
 
@@ -480,7 +502,8 @@ class _AuthCardState extends State<AuthCard>
 
 class AuthScreen extends StatelessWidget {
   static const routeName = '/auth';
-
+  late AuthMode authMode;
+  AuthScreen(this.authMode);
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -514,14 +537,14 @@ class AuthScreen extends StatelessWidget {
                             padding:
                                 const EdgeInsets.only(top: 60.0, bottom: 20),
                             child: SizedBox(
-                              height: 200.h,
+                              height: 150.h,
                               child: Image.asset(
                                 "lib/assets/images/logo_x0.25.png",
                                 fit: BoxFit.fill,
                               ),
                             ),
                           ),
-                          AuthCard(),
+                          AuthCard(authMode),
                         ],
                       ),
                     ),

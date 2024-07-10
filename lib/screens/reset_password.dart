@@ -1,18 +1,24 @@
 import 'dart:convert';
 
 import 'package:ewasfa/screens/auth_screen.dart';
+import 'package:ewasfa/widgets/background_painter.dart';
 import 'package:ewasfa/widgets/custom_app_bar.dart';
+import 'package:ewasfa/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/foundation.dart';
 
 import '../assets/app_data.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 @Category(<String>['Screens'])
-@Summary('The Screen through which the user can enter their new password after a successful forget password request')
+@Summary(
+    'The Screen through which the user can enter their new password after a successful forget password request')
 class ResetPasswordPage extends StatefulWidget {
   static const routeName = '/reset_password';
+
   @override
   _ResetPasswordPageState createState() => _ResetPasswordPageState();
 }
@@ -23,9 +29,12 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   TextEditingController _confirmPasswordController = TextEditingController();
   bool _isLoading = false;
   late String _otp;
+  final _formKey = GlobalKey<FormState>();
   late String _userPhone;
-
-
+  var isVisibility = true;
+  var isVisibility2 = true;
+  var visibilityIcon = Icons.visibility_outlined;
+  var visibilityIcon2 = Icons.visibility_outlined;
 
   Future<void> _resetPassword() async {
     setState(() {
@@ -37,13 +46,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     final password = _passwordController.text;
     final confirmPassword = _confirmPasswordController.text;
 
-
-
     // Check if password and confirm password match
     if (password != confirmPassword) {
-      showDialog(
+      showDialog(barrierDismissible: false,
         context: context,
-        builder: (context) => AlertDialog(
+        builder: (context) => AlertDialog(backgroundColor: Colors.white,
           title: Text('Password Mismatch'),
           content: Text(' password and confirm password do not match.'),
           actions: [
@@ -132,41 +139,179 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     });
   }
 
+  void changePasswordVisibility() {
+    isVisibility = !isVisibility;
+
+    visibilityIcon =
+        isVisibility ? Icons.visibility_outlined : Icons.visibility_off;
+  }
+
+  void changePasswordVisibility2() {
+    isVisibility2 = !isVisibility2;
+
+    visibilityIcon2 =
+        isVisibility ? Icons.visibility_outlined : Icons.visibility_off;
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    final arguments = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-      _otp = arguments['code'].toString();
-     _userPhone = arguments['phone'].toString();
+    final arguments =
+        ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
+    _otp = arguments['code'].toString();
+    _userPhone = arguments['phone'].toString();
 
     return Scaffold(
       appBar: CustomAppBar(
         pageTitle: 'Reset Password',
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: _codeController,
-              decoration: InputDecoration(labelText: 'Code'),
+      body: CustomPaint(
+        painter: BackgroundPainter(),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0, bottom: 20),
+                      child: SizedBox(
+                        height: 250.h,
+                        child: Image.asset(
+                          "lib/assets/images/logo_x0.25.png",
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding:  EdgeInsets.symmetric(vertical: 15.0.h),
+                      child: Text(
+                          AppLocalizations.of(context)!
+                              .resetPassword,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 17.sp)),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 20.0.h),
+                      child: CustomTextFormField(
+                        controller: _codeController,
+                        cursorColor: primarySwatch.shade500,
+                        enabledBorder: InputBorder.none,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return AppLocalizations.of(context)?.otp;
+                          }
+                          return null;
+                        },
+                        hintText: AppLocalizations.of(context)?.otp,
+                        textInputType: TextInputType.phone,
+                        textInputAction: TextInputAction.next,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 20.0.h),
+                      child: CustomTextFormField(
+                        controller: _passwordController,
+                        cursorColor: primarySwatch.shade500,
+                        enabledBorder: InputBorder.none,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return AppLocalizations.of(context)?.new_password;
+                          }
+                          return null;
+                        },
+                        hintText: AppLocalizations.of(context)?.new_password,
+                        textInputType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        obscureText: isVisibility,
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                changePasswordVisibility();
+                              });
+                            },
+                            icon: Icon(
+                              visibilityIcon,
+                              color: Colors.grey,
+                            )),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 20.0.h),
+                      child: CustomTextFormField(
+                        controller: _confirmPasswordController,
+                        cursorColor: primarySwatch.shade500,
+                        enabledBorder: InputBorder.none,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return AppLocalizations.of(context)?.new_password;
+                          }
+                          return null;
+                        },
+                        hintText: AppLocalizations.of(context)?.new_password,
+                        textInputType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        obscureText: isVisibility2,
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                changePasswordVisibility2();
+                              });
+                            },
+                            icon: Icon(
+                              visibilityIcon2,
+                              color: Colors.grey,
+                            )),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 30.0.h),
+                      child: GestureDetector(
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) {
+                            _isLoading ? null : _resetPassword();
+                          }
+                        },
+                        child: Container(
+                          height: 60.h,
+                          width: MediaQuery.of(context).size.width - 80,
+                          decoration: BoxDecoration(
+                              color:_confirmPasswordController.text.trim().isEmpty?Colors.yellow.shade300:Colors.black87 ,
+                              border:
+                                  Border.all(color: Colors.black, width: 3)),
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: _isLoading
+                                  ? CircularProgressIndicator()
+                                  : Text(
+                                      AppLocalizations.of(context)!
+                                          .login_button_label,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
+                                              color:_confirmPasswordController.text.trim().isEmpty? Colors.black:Colors.white,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 17.sp)),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(labelText: 'New Password'),
-              obscureText: true,
-            ),
-            TextField(
-              controller: _confirmPasswordController,
-              decoration: InputDecoration(labelText: 'Confirm New Password'),
-              obscureText: true,
-            ),
-            ElevatedButton(
-              onPressed: _isLoading ? null : _resetPassword,
-              child: _isLoading ? CircularProgressIndicator() : Text('Reset Password'),
-            ),
-          ],
+          ),
         ),
       ),
     );

@@ -8,6 +8,7 @@ import 'package:ewasfa/screens/order/order_successful_screen.dart';
 import 'package:ewasfa/screens/order/referred_order_screen.dart';
 import 'package:ewasfa/screens/order_details_screen.dart';
 import 'package:ewasfa/screens/reset_password.dart';
+import 'package:ewasfa/screens/splash_auth_screen.dart';
 import 'package:ewasfa/screens/zoomable_image_screen.dart';
 import 'package:ewasfa/widgets/address_book.dart';
 import 'package:ewasfa/widgets/map_widget.dart';
@@ -118,6 +119,7 @@ PageTransitionsTheme transitionTheme = PageTransitionsTheme(
 final Map<String, WidgetBuilder> routingTable = {
   // Order Screens
   CheckoutScreen.routeName: (ctx) => const CheckoutScreen(),
+  SplashAuthScreen.routeName: (ctx) => const SplashAuthScreen(),
   NewOrderScreen.routeName: (ctx) => const NewOrderScreen(),
   PlaceOrderScreen.routeName: (ctx) => const PlaceOrderScreen(),
   RecurringOrderScreen.routeName: (ctx) => const RecurringOrderScreen(),
@@ -128,7 +130,7 @@ final Map<String, WidgetBuilder> routingTable = {
   DoctorOrderDetailsScreen.routeName: (ctx) => DoctorOrderDetailsScreen(),
   // Login Screen
   SplashScreen.routeName: (ctx) => SplashScreen(),
-  AuthScreen.routeName: (ctx) => AuthScreen(),
+
   OTPScreen.routeName: (ctx) => OTPScreen(),
   ForgotPasswordScreen.routeName: (ctx) => ForgotPasswordScreen(),
   // Tabs in the navigation bar

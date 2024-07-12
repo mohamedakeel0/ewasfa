@@ -44,117 +44,82 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
             ? const Locale('ar')
             : const Locale('en'),
         child: offerLoaded
-            ? Scaffold(
+            ? Scaffold(backgroundColor: Colors.white,
                 extendBodyBehindAppBar: true,
                 appBar: CustomAppBar(pageTitle: appLocalization.offerinfo),
                 body: Container(
                   child: Container(
                     height: query.size.height,
                     margin: EdgeInsets.only(top: query.size.height * 0.15),
-                    child: Stack(
-                      alignment: AlignmentDirectional.bottomCenter,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      bottom: 24.0, left: 15.w, right: 15.w),
-                                  child: Text(
-                                    languageProvider.currentLanguage ==
-                                            Language.arabic
-                                        ? offer.arabicName
-                                        : offer.englishName,
-                                    style:
-                                        Theme.of(context).textTheme.titleLarge,
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 15.w),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.all(5.0),
-                                            child: Text(
-                                                '${appLocalization.priceBefore}  ${offer.priceBefore.toString()} SAR',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodySmall
-                                                    ?.copyWith(
-                                                      decoration: TextDecoration
-                                                          .lineThrough,
-                                                      color: Colors.grey,
-                                                      fontSize: 15.sp,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    )),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(5.0),
-                                            child: Text(
-                                                '${appLocalization.priceAfter}  ${offer.priceAfter.toString()} SAR',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodySmall
-                                                    ?.copyWith(
-                                                      color: Colors.black,
-                                                      fontSize: 16.sp,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                    )),
-                                          ),
-                                        ],
-                                      ),
-                                      Text(
-                                          "${appLocalization.offerValidity} ${offer.offerEndDate}"),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(vertical: 10.0.w),
-                                  child: ClippedOfferImage(
-                                      query: query, offer: offer),
-                                ),
-                              ],
-                            ),
-                          ],
+                        Padding(
+                          padding:
+                          EdgeInsets.symmetric(vertical: 10.0.w),
+                          child: ClippedOfferImage(
+                              query: query, offer: offer),
                         ),
-                        Container(
-                          height: 380.h,
-                          width: query.size.width,
-                          decoration: BoxDecoration(
-                              color: Color(0xFFEBC300),
-                              borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(35.sp),
-                                  topRight: Radius.circular(35.sp))),
-                          child: Padding(
-                            padding:  EdgeInsets.all(20.0.sp),
-                            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                              Text(
-                                  appLocalization.details,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
-                                    color: Colors.black,
-                                    fontSize: 16.sp,
-                                    fontWeight:
-                                    FontWeight.w500,
-                                  )),
-
-                            ],),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              bottom: 24.0, left: 15.w, right: 15.w),
+                          child: Text(
+                            languageProvider.currentLanguage ==
+                                Language.arabic
+                                ? offer.arabicName
+                                : offer.englishName,
+                            style:
+                            Theme.of(context).textTheme.titleLarge,
                           ),
-                        )
+                        ),
+                        Padding(
+                          padding:
+                          EdgeInsets.symmetric(horizontal: 15.w),
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Text(
+                                        '${appLocalization.priceBefore}  ${offer.priceBefore.toString()} SAR',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                          decoration: TextDecoration
+                                              .lineThrough,
+                                          color: Colors.grey,
+                                          fontSize: 15.sp,
+                                          fontWeight:
+                                          FontWeight.w500,
+                                        )),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Text(
+                                        '${appLocalization.priceAfter}  ${offer.priceAfter.toString()} SAR',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall
+                                            ?.copyWith(
+                                          color: Colors.black,
+                                          fontSize: 16.sp,
+                                          fontWeight:
+                                          FontWeight.w500,
+                                        )),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                  "${appLocalization.offerValidity} ${offer.offerEndDate}"),
+                            ],
+                          ),
+                        ),
+
                       ],
                     ),
                   ),

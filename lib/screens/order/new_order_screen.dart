@@ -7,8 +7,10 @@ import 'package:ewasfa/screens/add_new_address.dart';
 import 'package:ewasfa/screens/order/order_failed_screen.dart';
 import 'package:ewasfa/screens/zoomable_image_screen.dart';
 import 'package:ewasfa/widgets/custom_app_bar.dart';
+import 'package:ewasfa/widgets/custom_text_form_field.dart';
 import 'package:ewasfa/widgets/map_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -79,7 +81,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
             branches = retBranches;
           });
           if (userLatLng == const LatLng(0.0, 0.0)) {
-            LocationHelper.getCurrentUserLatLng().then((value) {              
+            LocationHelper.getCurrentUserLatLng().then((value) {
               if (value != const LatLng(0.0, 0.0)) {
                 setState(() {
                   userLatLng = value;
@@ -121,19 +123,54 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                   child: SingleChildScrollView(
                       padding: EdgeInsets.zero,
                       child: Container(
-                          margin: EdgeInsets.only(top: query.size.height * 0.1),
+                          margin: EdgeInsets.only(
+                              top: query.size.height * 0.1,
+                              bottom:  15.0.h,
+                          ),
                           child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
+                                _images.isEmpty
+                                    ? SizedBox()
+                                    : GestureDetector(
+                                        onTap: _showImageSourceSheet,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 10.0, bottom: 10),
+                                          child: SizedBox(
+                                            height: 100.h,
+                                            child: Image.asset(
+                                              "lib/assets/images/upload.png",
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
                                 GestureDetector(
                                   onTap: _showImageSourceSheet,
-                                  child: SizedBox(
-                                      width: double.infinity,
-                                      height: 200,
-                                      child: _images.isEmpty
-                                          ? const Icon(Icons.add_a_photo,
-                                              size: 50)
-                                          : CustomScrollView(
+                                  child: _images.isEmpty
+                                      ? SizedBox(
+                                          width: 100.w,
+                                          height: 120.h,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                              top: 10.0,
+                                              bottom: 10,
+                                            ),
+                                            child: SizedBox(
+                                              child: Image.asset(
+                                                "lib/assets/images/upload.png",
+                                                fit: BoxFit.fill,
+                                              ),
+                                            ),
+                                          ))
+                                      : Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 5.0),
+                                          child: SizedBox(
+                                            width: double.infinity,
+                                            height: 150.h,
+                                            child: CustomScrollView(
                                               slivers: [
                                                 SliverGrid(
                                                   gridDelegate:
@@ -179,7 +216,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                                                           File(image
                                                                               .path)),
                                                                       fit: BoxFit
-                                                                          .cover,
+                                                                          .fill,
                                                                     ),
                                                                   ),
                                                                 ),
@@ -198,306 +235,433 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                                                           image);
                                                                     });
                                                                   },
-                                                                  icon: Icon(
-                                                                    Icons.close,
-                                                                    color: Colors
-                                                                        .grey,
-                                                                    shadows: [
-                                                                      Shadow(
-                                                                          blurRadius:
-                                                                              2,
-                                                                          offset: const Offset(
-                                                                              0,
-                                                                              1),
-                                                                          color: Colors
-                                                                              .black
-                                                                              .withOpacity(0.7))
-                                                                    ],
+                                                                  icon:
+                                                                      Container(
+                                                                    decoration: BoxDecoration(
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                5.0),
+                                                                        border: Border.all(
+                                                                            color:
+                                                                                Colors.black,
+                                                                            width: 2)),
+                                                                    height:
+                                                                        30.h,
+                                                                    width: 30.w,
+                                                                    child: Icon(
+                                                                      Icons
+                                                                          .close,
+                                                                      color: Colors
+                                                                          .black,
+                                                                      shadows: [
+                                                                        Shadow(
+                                                                            blurRadius:
+                                                                                2,
+                                                                            offset: const Offset(0,
+                                                                                1),
+                                                                            color:
+                                                                                Colors.black.withOpacity(0.7))
+                                                                      ],
+                                                                    ),
                                                                   ),
                                                                 ),
                                                               ),
                                                             ],
                                                           ),
                                                         );
-                                                      } else {
-                                                        return Container(
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            border: Border.all(
-                                                              color:
-                                                                  Colors.grey,
-                                                              width: 1.0,
-                                                            ),
-                                                          ),
-                                                          child: const Icon(
-                                                              Icons
-                                                                  .add_a_photo),
-                                                        );
-                                                      }
+                                                      } else {}
                                                     },
                                                     childCount:
                                                         _images.length + 1,
                                                   ),
                                                 ),
                                               ],
-                                            )),
-                                ),
-                                const SizedBox(height: 20),
-                                Card(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: [
-                                        Visibility(
-                                            visible: _images.isNotEmpty,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 10.0, bottom: 10.0),
-                                              child: Text(appLocalization
-                                                  .selectAddressBranch),
-                                            )),
-                                        TextFormField(
-                                            controller: _promoCodeController,
-                                            decoration: InputDecoration(
-                                              labelText:
-                                                  appLocalization.promocode,
-                                              border:
-                                                  const OutlineInputBorder(),
-                                            )),
-                                        const SizedBox(height: 20),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            Expanded(
-                                              child: RadioListTile(
-                                                title: Text(appLocalization
-                                                    .pickFromStore),
-                                                value: 'store',
-                                                groupValue: _deliveryType,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _branchesPickup = true;
-                                                    _deliveryType =
-                                                        value as String;
-                                                  });
-                                                },
-                                              ),
                                             ),
-                                            Expanded(
-                                              child: RadioListTile(
-                                                title: Text(
-                                                    appLocalization.delivery),
-                                                value: 'delivery',
-                                                groupValue: _deliveryType,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    _selectedIndex = -1;
-                                                    _branchesPickup = false;
-                                                    _branchSelected = false;
-                                                    _deliveryType =
-                                                        value as String;
-                                                  });
-                                                },
-                                              ),
-                                            ),
-                                          ],
+                                          ),
                                         ),
-                                        Visibility(
-                                            visible: _images.isEmpty,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 10.0, bottom: 10.0),
-                                              child: Text(appLocalization
-                                                  .addPrescription),
-                                            )),
-                                        Visibility(
-                                          visible: _deliveryType == 'delivery',
-                                          child: Column(
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 20.w),
+                                  child: Visibility(
+                                      visible: _images.isEmpty,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 10.0, bottom: 10.0),
+                                        child: Text(
+                                            appLocalization.addPrescription),
+                                      )),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 15.0, vertical: 15.0),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.circular(15.sp),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.4),
+                                          spreadRadius: 5,
+                                          blurRadius: 4,
+                                          offset: Offset(0,
+                                              2), // changes position of shadow
+                                        ),
+                                      ],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16, vertical: 10),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.stretch,
+                                        children: [
+                                          Visibility(
+                                              visible: _images.isNotEmpty,
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 10.0, bottom: 10.0),
+                                                child: Text(appLocalization
+                                                    .selectAddressBranch),
+                                              )),
+                                          Padding(
+                                            padding:
+                                                EdgeInsets.only(top: 20.0.h),
+                                            child: CustomTextFormField(
+                                              controller: _promoCodeController,
+                                              validator: (value) {
+                                                if (value!.isEmpty) {
+                                                  return AppLocalizations.of(
+                                                          context)
+                                                      ?.enterCode;
+                                                }
+                                                return null;
+                                              },
+                                              enabled: true,
+                                              hintText:
+                                                  appLocalization.promocode,
+                                              textInputType:
+                                                  TextInputType.phone,
+                                              textInputAction:
+                                                  TextInputAction.next,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10.h),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
                                             children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceEvenly,
-                                                children: [
-                                                  ElevatedButton(
-                                                    onPressed: () {
-                                                      showAddressSheet(
-                                                          appLocalization);
-                                                    },
-                                                    child: Text(
-                                                      appLocalization
-                                                          .chooseAddress,
-                                                      style: Theme.of(context)
-                                                          .textTheme
-                                                          .titleMedium
-                                                          ?.copyWith(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.black,
-                                                          ),
-                                                    ),
-                                                  ),
-                                                  ElevatedButton(
-                                                    onPressed: () async {
-                                                      final args = await Navigator
-                                                              .of(context)
-                                                          .pushNamed(
-                                                              NewAddressScreen
-                                                                  .routeName)
-                                                          .then((value) =>
-                                                              value as Address);
-                                                      setState(() {
-                                                        _selectedAddress = args;
-                                                      });
-                                                    },
-                                                    child: Text(
-                                                        appLocalization
-                                                            .addNewAddress,
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .titleMedium
-                                                            ?.copyWith(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.black,
-                                                            )),
-                                                  ),
-                                                ],
+                                              Expanded(
+                                                child: RadioListTile(
+                                                  activeColor:
+                                                      primarySwatch.shade500,
+                                                  title: Text(appLocalization
+                                                      .pickFromStore),
+                                                  value: 'store',
+                                                  groupValue: _deliveryType,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      _branchesPickup = true;
+                                                      _deliveryType =
+                                                          value as String;
+                                                    });
+                                                  },
+                                                ),
                                               ),
-                                              if (_selectedAddress != null)
-                                                SizedBox(
-                                                  width: query.size.width * 0.9,
-                                                  child: Column(
-                                                    children: [
-                                                      const SizedBox(
-                                                          height: 20),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: Column(
-                                                          children: [
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                Text(
-                                                                    appLocalization
-                                                                        .city,
-                                                                    style: Theme.of(
-                                                                            context)
-                                                                        .textTheme
-                                                                        .bodyLarge
-                                                                        ?.copyWith(
-                                                                          fontWeight:
-                                                                              FontWeight.bold,
-                                                                        )),
-                                                                Text(
-                                                                    _selectedAddress
-                                                                            ?.city ??
-                                                                        "",
-                                                                    style: Theme.of(
-                                                                            context)
-                                                                        .textTheme
-                                                                        .bodyMedium),
-                                                              ],
+                                              Expanded(
+                                                child: RadioListTile(
+                                                  activeColor:
+                                                      primarySwatch.shade500,
+                                                  title: Text(
+                                                      appLocalization.delivery),
+                                                  value: 'delivery',
+                                                  groupValue: _deliveryType,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      _selectedIndex = -1;
+                                                      _branchesPickup = false;
+                                                      _branchSelected = false;
+                                                      _deliveryType =
+                                                          value as String;
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Visibility(
+                                            visible:
+                                                _deliveryType == 'delivery',
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        showAddressSheet(
+                                                            appLocalization);
+                                                      },
+                                                      child: Material(
+                                                        elevation: 5,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    15.sp),
+                                                        child: Container(
+                                                          clipBehavior: Clip
+                                                              .antiAliasWithSaveLayer,
+                                                          height: 55.h,
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width /
+                                                              2.5,
+                                                          decoration: BoxDecoration(
+                                                              color:
+                                                                  Colors.white,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(15
+                                                                          .sp),
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                  width: 2)),
+                                                          child: Center(
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(
+                                                                      10.0),
+                                                              child: Text(
+                                                                  appLocalization
+                                                                      .chooseAddress,
+                                                                  style: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .bodyMedium
+                                                                      ?.copyWith(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontWeight: FontWeight
+                                                                              .bold,
+                                                                          fontSize:
+                                                                              17.sp)),
                                                             ),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                Text(
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                    appLocalization
-                                                                        .addressLine,
-                                                                    style: Theme.of(
-                                                                            context)
-                                                                        .textTheme
-                                                                        .bodyLarge
-                                                                        ?.copyWith(
-                                                                          fontWeight:
-                                                                              FontWeight.bold,
-                                                                        )),
-                                                                Expanded(
-                                                                  child:
-                                                                      Padding(
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () async {
+                                                        final args = await Navigator
+                                                                .of(context)
+                                                            .pushNamed(
+                                                                NewAddressScreen
+                                                                    .routeName)
+                                                            .then((value) =>
+                                                                value
+                                                                    as Address);
+                                                        setState(() {
+                                                          _selectedAddress =
+                                                              args;
+                                                        });
+                                                      },
+                                                      child: Material(
+                                                        elevation: 5,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                    15.sp),
+                                                        child: Container(
+                                                          clipBehavior: Clip
+                                                              .antiAliasWithSaveLayer,
+                                                          height: 55.h,
+                                                          width: MediaQuery.of(
+                                                                      context)
+                                                                  .size
+                                                                  .width /
+                                                              2.5,
+                                                          decoration: BoxDecoration(
+                                                              color:
+                                                                  Colors.white,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(15
+                                                                          .sp),
+                                                              border: Border.all(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade300,
+                                                                  width: 2)),
+                                                          child: Center(
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(
+                                                                      10.0),
+                                                              child: Text(
+                                                                  appLocalization
+                                                                      .addNewAddress,
+                                                                  style: Theme.of(
+                                                                          context)
+                                                                      .textTheme
+                                                                      .bodyMedium
+                                                                      ?.copyWith(
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontWeight: FontWeight
+                                                                              .bold,
+                                                                          fontSize:
+                                                                              17.sp)),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                if (_selectedAddress != null)
+                                                  SizedBox(
+                                                    width:
+                                                        query.size.width * 0.9,
+                                                    child: Column(
+                                                      children: [
+                                                        const SizedBox(
+                                                            height: 20),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Column(
+                                                            children: [
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                      appLocalization
+                                                                          .city,
+                                                                      style: Theme.of(
+                                                                              context)
+                                                                          .textTheme
+                                                                          .bodyLarge
+                                                                          ?.copyWith(
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                          )),
+                                                                  Padding(
                                                                     padding: languageProvider.currentLanguage ==
                                                                             Language
                                                                                 .arabic
-                                                                        ? const EdgeInsets.only(
+                                                                        ? const EdgeInsets
+                                                                            .only(
                                                                             right:
-                                                                                50.0)
-                                                                        : const EdgeInsets.only(
+                                                                                40.0)
+                                                                        : const EdgeInsets
+                                                                            .only(
                                                                             left:
-                                                                                50.0),
+                                                                                40.0),
                                                                     child: Text(
-                                                                        _selectedAddress?.addressLine ??
+                                                                        _selectedAddress?.city ??
                                                                             "",
                                                                         style: Theme.of(context)
                                                                             .textTheme
                                                                             .bodyMedium),
                                                                   ),
+                                                                ],
+                                                              ),
+                                                              Padding(
+                                                                padding: EdgeInsets
+                                                                    .symmetric(
+                                                                        vertical:
+                                                                            10.0.h),
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Text(
+                                                                        overflow:
+                                                                            TextOverflow
+                                                                                .ellipsis,
+                                                                        appLocalization
+                                                                            .addressLine,
+                                                                        style: Theme.of(context)
+                                                                            .textTheme
+                                                                            .bodyLarge
+                                                                            ?.copyWith(
+                                                                              fontWeight: FontWeight.bold,
+                                                                            )),
+                                                                    Expanded(
+                                                                      child:
+                                                                          Padding(
+                                                                        padding: languageProvider.currentLanguage ==
+                                                                                Language.arabic
+                                                                            ? const EdgeInsets.only(right: 80.0)
+                                                                            : const EdgeInsets.only(left: 80.0),
+                                                                        child: Text(
+                                                                            _selectedAddress?.addressLine ??
+                                                                                "",
+                                                                            style:
+                                                                                Theme.of(context).textTheme.bodyMedium),
+                                                                      ),
+                                                                    ),
+                                                                  ],
                                                                 ),
-                                                              ],
-                                                            ),
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceBetween,
-                                                              children: [
-                                                                Text(
-                                                                    appLocalization
-                                                                        .landmark,
-                                                                    style: Theme.of(
-                                                                            context)
-                                                                        .textTheme
-                                                                        .bodyLarge
-                                                                        ?.copyWith(
-                                                                          fontWeight:
-                                                                              FontWeight.bold,
-                                                                        )),
-                                                                Text(
-                                                                    _selectedAddress
-                                                                            ?.landmark ??
-                                                                        "",
-                                                                    style: Theme.of(
-                                                                            context)
-                                                                        .textTheme
-                                                                        .bodyMedium),
-                                                              ],
-                                                            ),
-                                                          ],
+                                                              ),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                      appLocalization
+                                                                          .landmark,
+                                                                      style: Theme.of(
+                                                                              context)
+                                                                          .textTheme
+                                                                          .bodyLarge
+                                                                          ?.copyWith(
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
+                                                                          )),
+                                                                  Padding(
+                                                                    padding: languageProvider.currentLanguage ==
+                                                                            Language
+                                                                                .arabic
+                                                                        ? const EdgeInsets
+                                                                            .only(
+                                                                            right:
+                                                                                40.0)
+                                                                        : const EdgeInsets
+                                                                            .only(
+                                                                            left:
+                                                                                40.0),
+                                                                    child: Text(
+                                                                        _selectedAddress?.landmark ??
+                                                                            "",
+                                                                        style: Theme.of(context)
+                                                                            .textTheme
+                                                                            .bodyMedium),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
-                                                      ),
-                                                      Visibility(
-                                                        visible:
-                                                            _images.isNotEmpty,
-                                                        child: ElevatedButton(
-                                                            style: ElevatedButton
-                                                                .styleFrom(
-                                                                    textStyle: Theme.of(
-                                                                            context)
-                                                                        .textTheme
-                                                                        .titleMedium
-                                                                        ?.copyWith(
-                                                                          fontWeight:
-                                                                              FontWeight.bold,
-                                                                          color:
-                                                                              Colors.black,
-                                                                        ),
-                                                                    backgroundColor:
-                                                                        primarySwatch
-                                                                            .shade500),
-                                                            onPressed: () {
+                                                        Visibility(
+                                                          visible: _images
+                                                              .isNotEmpty,
+                                                          child:
+                                                              GestureDetector(
+                                                            onTap: () {
                                                               if (_selectedAddress !=
                                                                   null) {
                                                                 // Get the necessary details for the request
@@ -578,83 +742,48 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                                                     _images);
                                                               }
                                                             },
-                                                            child: Text(
-                                                                appLocalization
-                                                                    .placeOrder,
-                                                                style: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .titleMedium
-                                                                    ?.copyWith(
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
-                                                                      color: Colors
-                                                                          .black,
-                                                                    ))),
-                                                      )
-                                                    ],
-                                                  ),
-                                                )
-                                            ],
+                                                            child: Container(
+                                                              height: 60.h,
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width -
+                                                                  150,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                              child: Center(
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                          10.0),
+                                                                  child: Text(
+                                                                      appLocalization
+                                                                          .placeOrder,
+                                                                      style: Theme.of(
+                                                                              context)
+                                                                          .textTheme
+                                                                          .bodyMedium
+                                                                          ?.copyWith(
+                                                                              color: Colors.white,
+                                                                              fontWeight: FontWeight.w600,
+                                                                              fontSize: 17.sp)),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  )
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        Visibility(
-                                          visible: _branchSelected &&
-                                              _images.isNotEmpty,
-                                          child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  textStyle: Theme.of(context)
-                                                      .textTheme
-                                                      .titleMedium
-                                                      ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
-                                                  backgroundColor:
-                                                      primarySwatch.shade500),
-                                              onPressed: () {
-                                                int userId = userid;
-                                                //String imagePath = _images?.first.path ?? '';
-                                                String promoCode =
-                                                    _promoCodeController.text;
-                                                int referredUserId = 0;
-                                                Map<String, dynamic>
-                                                    requestBody = {
-                                                  'user_id': userId,
-                                                  'promo_code': promoCode,
-                                                  'address_id': selectedPharmacy
-                                                      .address.id,
-                                                  'branch_id':
-                                                      selectedPharmacy.id,
-                                                  'address': selectedPharmacy
-                                                      .address.addressLine,
-                                                  'city': selectedPharmacy
-                                                      .address.city,
-                                                  'long': selectedPharmacy
-                                                      .address.longitude,
-                                                  'lat': selectedPharmacy
-                                                      .address.latitude,
-                                                  'land_mark': selectedPharmacy
-                                                      .address.landmark,
-                                                  'refered': referredUserId,
-                                                };
-                                                makeOrderRequest(
-                                                    requestBody, _images);
-                                              },
-                                              child: Text(
-                                                  appLocalization.placeOrder,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleMedium
-                                                      ?.copyWith(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ))),
-                                        )
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -673,7 +802,14 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                           child: SizedBox(
                                             width: query.size.width * 0.9,
                                             height: query.size.height * 0.3,
-                                            child: ListView.builder(
+                                            child: ListView.separated(
+                                              physics: NeverScrollableScrollPhysics(),
+                                              separatorBuilder:
+                                                  (context, index) {
+                                                return SizedBox(
+                                                  height: 8,
+                                                );
+                                              },
                                               padding: EdgeInsets.zero,
                                               itemCount: branches.length,
                                               itemBuilder: (context, index) {
@@ -689,12 +825,25 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                                 final isSelected =
                                                     _selectedIndex == index;
                                                 return Container(
+                                                  clipBehavior: Clip
+                                                      .antiAliasWithSaveLayer,
+                                                  decoration: BoxDecoration(
+                                                    color: !isSelected
+                                                        ? Theme.of(context)
+                                                            .listTileTheme
+                                                            .tileColor
+                                                        : primarySwatch
+                                                            .shade400,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20.sp),
+                                                  ),
                                                   alignment: Alignment.center,
-                                                  height: 70,
+                                                  height: 80.h,
                                                   child: ListTile(
                                                     contentPadding:
                                                         const EdgeInsets.all(
-                                                            10.0),
+                                                            5.0),
                                                     leading: const Icon(
                                                         Icons.local_pharmacy),
                                                     trailing: branches[index]
@@ -705,7 +854,11 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                                         : SizedBox(
                                                             width: 90,
                                                             child: Visibility(
-                                                              visible: userLatLng != const LatLng(0.0,0.0),
+                                                              visible:
+                                                                  userLatLng !=
+                                                                      const LatLng(
+                                                                          0.0,
+                                                                          0.0),
                                                               child: Column(
                                                                 mainAxisAlignment:
                                                                     MainAxisAlignment
@@ -714,7 +867,8 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                                                   SizedBox(
                                                                     height: 50,
                                                                     width: 100,
-                                                                    child: Center(
+                                                                    child:
+                                                                        Center(
                                                                       child: Flex(
                                                                           direction:
                                                                               Axis.vertical,
@@ -747,12 +901,6 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                                               ),
                                                             ),
                                                           ),
-                                                    tileColor: !isSelected
-                                                        ? Theme.of(context)
-                                                            .listTileTheme
-                                                            .tileColor
-                                                        : primarySwatch
-                                                            .shade900,
                                                     title: Text(name,
                                                         style: !isSelected
                                                             ? Theme.of(context)
@@ -794,7 +942,64 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                           ),
                                         );
                                       }
-                                    }))
+                                    })),
+                                Center(
+                                  child: Visibility(
+                                    visible:
+                                        _branchSelected && _images.isNotEmpty,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        int userId = userid;
+                                        //String imagePath = _images?.first.path ?? '';
+                                        String promoCode =
+                                            _promoCodeController.text;
+                                        int referredUserId = 0;
+                                        Map<String, dynamic> requestBody = {
+                                          'user_id': userId,
+                                          'promo_code': promoCode,
+                                          'address_id':
+                                              selectedPharmacy.address.id,
+                                          'branch_id': selectedPharmacy.id,
+                                          'address': selectedPharmacy
+                                              .address.addressLine,
+                                          'city': selectedPharmacy.address.city,
+                                          'long': selectedPharmacy
+                                              .address.longitude,
+                                          'lat':
+                                              selectedPharmacy.address.latitude,
+                                          'land_mark':
+                                              selectedPharmacy.address.landmark,
+                                          'refered': referredUserId,
+                                        };
+                                        makeOrderRequest(requestBody, _images);
+                                      },
+                                      child: Container(
+                                        height: 60.h,
+                                        width:
+                                            MediaQuery.of(context).size.width -
+                                                150,
+                                        decoration: BoxDecoration(
+                                          color: Colors.black,
+                                        ),
+                                        child: Center(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: Text(
+                                                appLocalization.placeOrder,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium
+                                                    ?.copyWith(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 17.sp)),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
                               ]))),
                 )));
       },

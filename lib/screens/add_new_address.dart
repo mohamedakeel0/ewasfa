@@ -1,5 +1,7 @@
 import 'package:ewasfa/providers/addresses.dart';
+import 'package:ewasfa/widgets/background_painter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -104,16 +106,24 @@ class _NewAddressScreenState extends State<NewAddressScreen> {
             appBar: CustomAppBar(
               pageTitle: appLocalization.addNewAddress,
             ),
-            body: Container(
-              height: query.size.height,
-              width: query.size.width,
+            body: CustomPaint(
+              painter: BackgroundPainter(),
               child: Container(
-                margin: EdgeInsets.only(top: query.size.height * 0.15),
+                height: query.size.height,
+                width: query.size.width,
+
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: Column(
+                    child: Column(mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        SizedBox(
+                          height: 200.h,
+                          child: Image.asset(
+                            "lib/assets/images/logo_x0.25.png",
+                            fit: BoxFit.fill,
+                          ),
+                        ),
                         // Address Line TextFormField
                         TextFormField(
                           controller: _addressController,
@@ -148,22 +158,32 @@ class _NewAddressScreenState extends State<NewAddressScreen> {
                           decoration:
                               InputDecoration(labelText: appLocalization.city),
                         ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: primarySwatch.shade500),
-                          onPressed: _navigateToMapScreen,
-                          child: Text(
-                            appLocalization.selectLocation,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
+                         SizedBox(height: 50.h),
+                        GestureDetector(
+                          onTap: _navigateToMapScreen,
+                          child: Container(
+                            height: 60.h,
+                            width: MediaQuery.of(context).size.width - 80,
+                            decoration: BoxDecoration(
+                                color:  Colors.black,
+                                border: Border.all(color: Colors.black, width: 3)),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Text(
+                                    appLocalization.selectLocation,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 17.sp)),
+                              ),
+                            ),
                           ),
                         ),
+
                         const SizedBox(height: 16),
                         Text(
                           selectedLocation == null

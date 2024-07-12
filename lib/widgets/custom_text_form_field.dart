@@ -1,4 +1,5 @@
 
+import 'package:ewasfa/assets/app_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -77,12 +78,17 @@ class CustomTextFormField extends StatelessWidget {
                   fontWeight: FontWeight.w400,
                   color: Colors.black),
       keyboardType: textInputType ?? TextInputType.name,
-      decoration: InputDecoration(
+      decoration: InputDecoration(border:  enabledBorder ??
+          OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.sp),
+              borderSide: BorderSide(
+                  color:primarySwatch.withOpacity(0.4),
+                  width: 2.5.sp / 2)),
         enabledBorder: enabledBorder ??
             OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.sp),
                 borderSide: BorderSide(
-                    color: Colors.grey.withOpacity(0.2),
+                    color: Colors.grey.withOpacity(0.4),
                     width: 2.5.sp / 2)),
         contentPadding: EdgeInsets.symmetric(
             vertical:20.sp, horizontal:10.sp),

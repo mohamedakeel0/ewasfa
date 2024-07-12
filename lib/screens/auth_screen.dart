@@ -569,4 +569,5 @@ class AuthScreen extends StatelessWidget {
 enum AuthMode {
   signUp,
   login,
+  no,
 }

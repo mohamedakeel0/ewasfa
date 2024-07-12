@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ewasfa/screens/app_layout_screen.dart';
 import 'package:ewasfa/screens/zoomable_image_screen.dart';
 import 'package:ewasfa/widgets/image_loader.dart';
@@ -54,7 +55,8 @@ class _PreviousOrderDetailsScreenState
   void didChangeDependencies() {
     super.didChangeDependencies();
     order = ModalRoute.of(context)!.settings.arguments as Order;
-    Logger().d("Pharmacy ID: ${order.pharmacyId}");
+    print("Pharmacy ID: ${order.pharmacyId}");
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (order.pharmacyId != 0) {
         isPickup = true;
@@ -381,16 +383,18 @@ class ClippedOfferImage extends StatelessWidget {
                 "$ordersImagesDirectory/$imageUrl"
               ]);
         },
-        child: SizedBox(
+        child: CachedNetworkImage(
           height: query.size.height * 0.3,
           width: query.size.width * 0.9,
-          child: ImageLoader(
-              imageUrl: "$ordersImagesDirectory/$imageUrl",
-              timeoutDuration: const Duration(seconds: 5),
-              fallbackImage: Image.asset(
-                "lib/assets/images/not_found.png",
-              )),
-        ),
+          imageUrl: "$ordersImagesDirectory/$imageUrl",
+          fit: BoxFit.fill,
+          placeholder: (context, url) =>  Center(
+              child: LoadingIndicator(
+                  indicatorType: Indicator.ballBeat,
+                  colors: [primarySwatch])),
+          errorWidget: (context, url, error) =>  Image.asset(
+            "lib/assets/images/not_found.png",
+          ),),
       ),
     );
   }

@@ -202,7 +202,7 @@ class MyApp extends StatelessWidget {
         builder: (context, child) {
           return const MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: appName,
+            title: appName,color: Colors.white,
             home: MyHomePage(),
           );
         });
@@ -272,7 +272,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           languageProvider.currentLanguage == Language.arabic
                               ? const Locale('ar')
                               : const Locale('en'),
-                      child: MaterialApp(
+                      child: MaterialApp(color: Colors.white,
                           debugShowCheckedModeBanner: false,
                           locale: languageProvider.currentLanguage ==
                                   Language.arabic
@@ -290,7 +290,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ],
                           theme: Provider.of<AppTheme>(ctx)
                               .currentTheme
-                              .copyWith(useMaterial3: false,
+                              .copyWith(useMaterial3: false,backgroundColor: Colors.white,scaffoldBackgroundColor: Colors.white,
                                   pageTransitionsTheme: PageTransitionsTheme(
                                     builders: {
                                       TargetPlatform.android:

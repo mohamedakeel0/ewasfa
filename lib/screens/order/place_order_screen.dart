@@ -1,5 +1,6 @@
 import 'package:ewasfa/screens/app_layout_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
@@ -20,7 +21,7 @@ import 'package:ewasfa/widgets/custom_app_bar.dart';
 class PlaceOrderScreen extends StatelessWidget {
   static const routeName = '/place_order';
 
-  const PlaceOrderScreen({Key? key}) : super(key: key);
+  const   PlaceOrderScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +29,14 @@ class PlaceOrderScreen extends StatelessWidget {
     return Consumer<UserData>(builder: (context, userData, _) {
       if (!userData.isInitialized) {
         // Return a loading indicator or placeholder widget while the data is being initialized
-        return Center(
+        return const Center(
           child: SizedBox(
             height: 200,
             width: 200,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 LoadingIndicator(
                     indicatorType: Indicator.ballBeat, colors: [primarySwatch]),
               ],
@@ -57,92 +58,97 @@ class PlaceOrderScreen extends StatelessWidget {
           locale: languageProvider.currentLanguage == Language.arabic
               ? const Locale('ar')
               : const Locale('en'),
-          child: Scaffold(
-            appBar: CustomAppBar(pageTitle: appLocalization.placeNewOrder),
+          child: Scaffold(backgroundColor: Colors.white,
+            appBar: CustomAppBar(pageTitle: appLocalization.placeNewOrder,
+            leading: Container(
+              color: Colors.white,
+              width: 20.w,
+            ),),
             body: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
                   margin: const EdgeInsets.only(top: 10),
                   child: Image.asset(
-                    "lib/assets/images/place_order.png",
-                    height: query.size.height * 0.5,
+                    "lib/assets/images/logo.png",
+                    height: query.size.height * 0.2,
                     width: query.size.width * 0.5,
                   ),
                 ),
-                Text(
-                  appLocalization.placeOrder,
-                  style: Theme.of(context).textTheme.titleLarge,
+                Padding(
+                  padding:  EdgeInsets.all(30.0.h),
+                  child: Text(
+                    appLocalization.placeOrder,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                 ),
-                const SizedBox(height: 20),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: primarySwatch.shade500),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(NewOrderScreen.routeName);
-                      },
-                      child: Text(appLocalization.newOrder,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              )),
+                    GestureDetector(onTap: (){
+                      Navigator.of(context)
+                          .pushNamed(NewOrderScreen.routeName);
+                    },
+                      child:Container(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        height: 60.h,
+                        width: MediaQuery.of(context).size.width /2.2,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+
+                            borderRadius: BorderRadius.circular(25.sp),
+                            border: Border.all(color:  Colors.grey.shade300,
+                                width: 2)),
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                                appLocalization.newOrder,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                    color:  Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17.sp)),
+                          ),
+                        ),
+                      ),
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          textStyle: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                                  color: Colors.grey.shade700,
-                                  fontWeight: FontWeight.bold),
-                          backgroundColor: primarySwatch.shade500),
-                      onPressed: () {
-                        Navigator.of(context)
-                            .pushNamed(ReferredOrderScreen.routeName);
-                      },
-                      child: Text(appLocalization.referredOrder,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              )),
+                    GestureDetector(onTap: (){
+                      Navigator.of(context)
+                          .pushNamed(ReferredOrderScreen.routeName);
+                    },
+                      child:Container(clipBehavior: Clip.antiAliasWithSaveLayer,
+                        height: 60.h,
+                        width: MediaQuery.of(context).size.width /2.2,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+
+                            borderRadius: BorderRadius.circular(25.sp),
+                            border: Border.all(color:  Colors.grey.shade300,
+                                width: 2)),
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                                appLocalization.referredOrder,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                    color:  Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17.sp)),
+                          ),
+                        ),
+                      ),
                     ),
+
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        textStyle: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(
-                                color: Colors.grey.shade700,
-                                fontWeight: FontWeight.bold),
-                        backgroundColor: primarySwatch.shade500),
-                    onPressed: () {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          AppLayoutScreen.routeName, (route) => false);
-                    },
-                    child: Text(appLocalization.homePage,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            )),
-                  ),
-                ),
+
               ],
             ),
           ),

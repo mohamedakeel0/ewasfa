@@ -27,11 +27,11 @@ class AppTheme with ChangeNotifier {
   }
   /// Returns the current Theme of the application. Is either [ThemeData.dark()] or [ThemeData.light()] depending on user selection. Also sets font family to "Cairo" if the language is arabic
   ThemeData get currentTheme => _isDarkMode
-      ? ThemeData.dark().copyWith(
+      ? ThemeData.dark().copyWith(useMaterial3: false,
           colorScheme: ThemeData.dark().colorScheme.copyWith(),
           textTheme: currentLanguage == Language.arabic? Typography().white.apply(fontFamily: 'Cairo'): Typography().white,          
         )
-      : ThemeData.light().copyWith(
+      : ThemeData.light().copyWith(useMaterial3: false,
           colorScheme: ThemeData.light().colorScheme.copyWith(),
           textTheme:  currentLanguage == Language.arabic? Typography().black.apply(fontFamily: 'Cairo'): Typography().black,
         );
@@ -44,7 +44,7 @@ class AppTheme with ChangeNotifier {
     String lang = prefs.getString("language") ?? "na";
     currentLanguage =
         lang == "Language.arabic" ? Language.arabic : Language.english;
-    logger.d("Retrieved Theme: ${_isDarkMode ? "Dark" : "Light"}");
+    print("Retrieved Theme: ${_isDarkMode ? "Dark" : "Light"}");
     notifyListeners();
   }
 

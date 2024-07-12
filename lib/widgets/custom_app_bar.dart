@@ -1,6 +1,7 @@
 import 'package:ewasfa/providers/language.dart';
 import 'package:ewasfa/screens/settings_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,7 +15,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String pageTitle;
   TabBar? tabBar;
   List<Widget>? actions;
-  CustomAppBar({super.key, required this.pageTitle, this.tabBar, this.actions});
+Widget? leading;
+
+  CustomAppBar({super.key, required this.pageTitle, this.leading, this.tabBar, this.actions});
 
   @override
   Widget build(BuildContext context) {
@@ -37,53 +40,60 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               backgroundColor: Colors.transparent,
               centerTitle: true,
               bottom: tabBar,
+              leading: leading  ,
               title: Text(
                 pageTitle,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              actions:actions==null? []:[
-                ...?actions,
-                PopupMenuButton(
-                  icon: Icon(Icons.more_vert,
-                      color: Theme.of(context).iconTheme.color),
-                  itemBuilder: (BuildContext context) {
-                    return [
-                      PopupMenuItem(
-                        value: 'Logout',
-                        child: ListTile(
-                          leading: auth.isGuest
-                              ? Icon(Icons.login,
-                                  color: Theme.of(context).iconTheme.color)
-                              : Icon(Icons.logout,
-                                  color: Theme.of(context).iconTheme.color),
-                          title: Text(
-                            auth.isGuest
-                                ? appLocalization.login
-                                : appLocalization.logout,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ),
+              actions: actions == null
+                  ? []
+                  : [
+                      ...?actions,
+                      PopupMenuButton(
+                        icon: Icon(Icons.more_vert,
+                            color: Theme.of(context).iconTheme.color),
+                        itemBuilder: (BuildContext context) {
+                          return [
+                            PopupMenuItem(
+                              value: 'Logout',
+                              child: ListTile(
+                                leading: auth.isGuest
+                                    ? Icon(Icons.login,
+                                        color:
+                                            Theme.of(context).iconTheme.color)
+                                    : Icon(Icons.logout,
+                                        color:
+                                            Theme.of(context).iconTheme.color),
+                                title: Text(
+                                  auth.isGuest
+                                      ? appLocalization.login
+                                      : appLocalization.logout,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ),
+                            ),
+                            PopupMenuItem(
+                              value: 'Settings',
+                              child: ListTile(
+                                leading: Icon(Icons.settings,
+                                    color: Theme.of(context).iconTheme.color),
+                                title: Text(appLocalization.settings,
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium),
+                              ),
+                            ),
+                          ];
+                        },
+                        onSelected: (value) {
+                          if (value == 'Logout') {
+                            Provider.of<Auth>(context, listen: false).logout();
+                          } else if (value == "Settings") {
+                            Navigator.of(context)
+                                .pushNamed(SettingsScreen.routeName);
+                          }
+                        },
                       ),
-                      PopupMenuItem(
-                        value: 'Settings',
-                        child: ListTile(
-                          leading: Icon(Icons.settings,
-                              color: Theme.of(context).iconTheme.color),
-                          title: Text(appLocalization.settings,
-                              style: Theme.of(context).textTheme.bodyMedium),
-                        ),
-                      ),
-                    ];
-                  },
-                  onSelected: (value) {
-                    if (value == 'Logout') {
-                      Provider.of<Auth>(context, listen: false).logout();
-                    } else if (value == "Settings") {
-                      Navigator.of(context).pushNamed(SettingsScreen.routeName);
-                    }
-                  },
-                ),
-              ],
+                    ],
             ),
           ),
         ),

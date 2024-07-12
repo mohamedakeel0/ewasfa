@@ -2,8 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:ewasfa/providers/language.dart';
+import 'package:ewasfa/screens/app_layout_screen.dart';
 import 'package:ewasfa/screens/auth_screen.dart';
+import 'package:ewasfa/widgets/background_painter.dart';
+import 'package:ewasfa/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -37,29 +41,32 @@ class OTPScreen extends StatelessWidget {
     phone = args[1].toString();
     print(code);
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Flexible(
-            child: Image.asset("lib/assets/images/logo_x0.5.png"),
-          ),
-          Flexible(
-            flex: deviceSize.width > 600 ? 2 : 1,
-            child: Consumer<LanguageProvider>(
-              builder: (context, languageProvider, _) {
-                return Localizations(
-                  delegates: AppLocalizations.localizationsDelegates,
-                  locale: languageProvider.currentLanguage == Language.arabic
-                      ? const Locale('ar')
-                      : const Locale('en'),
-                  child: VerifyCard(
-                      code: int.parse(code), phone: int.parse(phone)),
-                );
-              },
+      body: CustomPaint(
+        painter: BackgroundPainter(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Flexible(
+              child: Image.asset("lib/assets/images/logo_x0.5.png"),
             ),
-          ),
-        ],
+            Flexible(
+              flex: deviceSize.width > 600 ? 2 : 1,
+              child: Consumer<LanguageProvider>(
+                builder: (context, languageProvider, _) {
+                  return Localizations(
+                    delegates: AppLocalizations.localizationsDelegates,
+                    locale: languageProvider.currentLanguage == Language.arabic
+                        ? const Locale('ar')
+                        : const Locale('en'),
+                    child: VerifyCard(
+                        code: int.parse(code), phone: int.parse(phone)),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -90,42 +97,68 @@ class _VerifyCardState extends State<VerifyCard> {
         children: [
           Form(
             key: _formKey,
-            child: TextFormField(
-              keyboardType: TextInputType.number,
-              maxLength: 5,
-              decoration: InputDecoration(
-                labelText: appLocalization.enterOTP,
-                border: const OutlineInputBorder(),
+            child:   Padding(
+              padding: EdgeInsets.only(top: 20.0.h),
+              child: CustomTextFormField(
+                maxLength: 5,
+                enabledBorder: InputBorder.none,
+                onChanged: (value) {
+                  setState(() {
+                    _otp = value;
+                  });
+                },
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return AppLocalizations.of(context)?.phoneEmptyMsg;
+                  }
+                  return null;
+                },
+                hintText:
+                appLocalization.enterOTP,
+                textInputType: TextInputType.phone,
+                textInputAction: TextInputAction.next,
               ),
-              onChanged: (value) {
-                setState(() {
-                  _otp = value;
+            ),
+
+          ),
+           SizedBox(height: 20.h),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 20.0.h),
+            child: GestureDetector(
+              onTap:_otp.length == 5? () async{
+                final auth = Provider.of<Auth>(context, listen: false);
+                await _verifyOTP(context)?.then((value) {
+                  Logger().d(value);
+                  if (value == OTPState.success) {
+                    auth.setPhoneVerify(true);
+                    Navigator.pushNamed(context, AppLayoutScreen.routeName);
+                  }
                 });
-              },
+              }:null,
+              child: Container(
+                height: 60.h,
+                width: MediaQuery.of(context).size.width - 80,
+                decoration: BoxDecoration(
+                    color: Colors.yellow.shade200,
+                    border: Border.all(color: Colors.black, width: 3)),
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(
+                        appLocalization.submit,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(
+                            color:  Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 17.sp)),
+                  ),
+                ),
+              ),
             ),
           ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.grey.shade700,
-                    ),
-                backgroundColor: primarySwatch.shade500,
-                disabledBackgroundColor: primarySwatch.shade900),
-            onPressed: _otp.length == 5
-                ? () async {
-                    final auth = Provider.of<Auth>(context, listen: false);
-                    await _verifyOTP(context)?.then((value) {
-                      Logger().d(value);
-                      if (value == OTPState.success) {
-                        auth.setPhoneVerify(true);
-                        Navigator.pushNamed(context, MyHomePage.routeName);
-                      }
-                    });
-                  }
-                : null,
-            child: Text(appLocalization.submit),
-          ),
+
         ],
       ),
     );
@@ -142,7 +175,7 @@ class _VerifyCardState extends State<VerifyCard> {
     if (_otp == widget.code.toString()) {
       return showDialog(
         context: context,
-        builder: (ctx) => AlertDialog(
+        builder: (ctx) => AlertDialog(backgroundColor: Colors.white,
           title: Text(appLocalization.orderSuccess),
           content: Text(appLocalization.otpSuccessful),
           actions: <Widget>[

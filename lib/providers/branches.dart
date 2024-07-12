@@ -38,7 +38,8 @@ class Branches with ChangeNotifier {
   /// Sends a request to the remote API to fetch branches data. If successful, retrieves and stores branches data in the [_branches] list. Throws an [Exception] if an error occurs.
   /// Notifies listeners after completing request response parsing.
   Future<void> fetchBranches() async {
-    Logger().d("Fetching Branches");
+    print("Fetching Branches");
+
     List<Pharmacy> pharmacies = [];
     const url = "$apiUrl/show_branches";
     try {

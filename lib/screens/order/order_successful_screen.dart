@@ -1,4 +1,5 @@
 import 'package:ewasfa/main.dart';
+import 'package:ewasfa/screens/app_layout_screen.dart';
 import 'package:ewasfa/screens/order/place_order_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -72,7 +73,7 @@ class OrderSuccessfulScreen extends StatelessWidget {
                           backgroundColor: primarySwatch.shade500),
                       onPressed: () {
                         Navigator.pushNamedAndRemoveUntil(
-                            context, MyHomePage.routeName, (route) => false);
+                            context, AppLayoutScreen.routeName, (route) => false);
                       },
                       child: Text(appLocalization.homePage,
                           style: Theme.of(context).textTheme.titleMedium),

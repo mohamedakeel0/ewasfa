@@ -290,7 +290,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ],
                           theme: Provider.of<AppTheme>(ctx)
                               .currentTheme
-                              .copyWith(
+                              .copyWith(useMaterial3: false,
                                   pageTransitionsTheme: PageTransitionsTheme(
                                     builders: {
                                       TargetPlatform.android:

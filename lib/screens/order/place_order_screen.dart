@@ -1,3 +1,4 @@
+import 'package:ewasfa/screens/app_layout_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
@@ -130,7 +131,7 @@ class PlaceOrderScreen extends StatelessWidget {
                         backgroundColor: primarySwatch.shade500),
                     onPressed: () {
                       Navigator.of(context).pushNamedAndRemoveUntil(
-                          MyHomePage.routeName, (route) => false);
+                          AppLayoutScreen.routeName, (route) => false);
                     },
                     child: Text(appLocalization.homePage,
                         style: Theme.of(context)

@@ -4,9 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class SplashAuthScreen extends StatelessWidget {
+class SplashAuthScreen extends StatefulWidget {
   const SplashAuthScreen({Key? key}) : super(key: key);
   static const routeName = '/splash_auth';
+
+  @override
+  State<SplashAuthScreen> createState() => _SplashAuthScreenState();
+}
+
+class _SplashAuthScreenState extends State<SplashAuthScreen> {
+  AuthMode authMode=AuthMode.login;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +41,9 @@ class SplashAuthScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 20.0.h),
                 child: GestureDetector(
                   onTap: () {
+                    setState(() {
+                      authMode=AuthMode.signUp;
+                    });
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => AuthScreen(AuthMode.signUp)));
                   },
@@ -41,7 +51,7 @@ class SplashAuthScreen extends StatelessWidget {
                     height: 60.h,
                     width: MediaQuery.of(context).size.width - 80,
                     decoration: BoxDecoration(
-                        color: Colors.yellow.shade100,
+                        color: authMode==AuthMode.signUp? Colors.black: Colors.yellow.shade100,
                         border: Border.all(color: Colors.black, width: 3)),
                     child: Center(
                       child: Padding(
@@ -52,7 +62,7 @@ class SplashAuthScreen extends StatelessWidget {
                                 .textTheme
                                 .bodyMedium
                                 ?.copyWith(
-                                    color: Colors.black,
+                                    color: authMode!=AuthMode.signUp? Colors.black: Colors.white,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 17.sp)),
                       ),
@@ -64,6 +74,9 @@ class SplashAuthScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 20.0.h),
                 child: GestureDetector(
                   onTap: () {
+                    setState(() {
+                      authMode=AuthMode.login;
+                    });
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => AuthScreen(AuthMode.login)));
                   },
@@ -71,7 +84,7 @@ class SplashAuthScreen extends StatelessWidget {
                     height: 60.h,
                     width: MediaQuery.of(context).size.width - 80,
                     decoration: BoxDecoration(
-                        color: Colors.black,
+                        color:authMode==AuthMode.login? Colors.black: Colors.yellow.shade100,
                         border: Border.all(color: Colors.black, width: 3)),
                     child: Center(
                       child: Padding(
@@ -82,7 +95,7 @@ class SplashAuthScreen extends StatelessWidget {
                                 .textTheme
                                 .bodyMedium
                                 ?.copyWith(
-                                    color: Colors.white,
+                                    color:authMode==AuthMode.login? Colors.white: Colors.black,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 17.sp)),
                       ),

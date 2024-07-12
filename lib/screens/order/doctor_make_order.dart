@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:ewasfa/screens/app_layout_screen.dart';
 import 'package:ewasfa/screens/order/doctor_make_order_details.dart';
 import 'package:ewasfa/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -140,7 +141,7 @@ class _DoctorMakeOrderScreenState extends State<DoctorMakeOrderScreen> {
                       backgroundColor: primarySwatch.shade500),
                   onPressed: () {
                     Navigator.of(context).pushNamedAndRemoveUntil(
-                        MyHomePage.routeName, (route) => false);
+                        AppLayoutScreen.routeName, (route) => false);
                   },
                   child: Text(
                     appLocalization.homePage,

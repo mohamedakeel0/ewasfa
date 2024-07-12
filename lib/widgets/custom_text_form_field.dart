@@ -25,6 +25,7 @@ class CustomTextFormField extends StatelessWidget {
     this.onSaved,
     this.enabledBorder,
     this.enabled,
+    this.maxLength,
     this.context,
     this.cursorColor,
   });
@@ -47,6 +48,7 @@ class CustomTextFormField extends StatelessWidget {
   final void Function(String)? onChanged;
   final void Function(String?)? onSaved;
   final TextStyle? style;
+  final int?   maxLength;
   final FocusNode? focusNode;
   final BuildContext? context;
    bool? enabled;
@@ -57,7 +59,7 @@ class CustomTextFormField extends StatelessWidget {
         TextFormField(  cursorColor:cursorColor,
           obscuringCharacter: '●',
       focusNode: focusNode,
-      controller: controller,
+      controller: controller,maxLength:maxLength ,
       onChanged: onChanged,onSaved:onSaved ,
       validator: validator,
       textInputAction: textInputAction ?? TextInputAction.done,

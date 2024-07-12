@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ewasfa/screens/zoomable_image_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
 import 'package:provider/provider.dart';
@@ -23,6 +25,7 @@ class OfferDetailsScreen extends StatefulWidget {
 class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
   late final Offer offer;
   bool offerLoaded = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -46,53 +49,112 @@ class _OfferDetailsScreenState extends State<OfferDetailsScreen> {
                 appBar: CustomAppBar(pageTitle: appLocalization.offerinfo),
                 body: Container(
                   child: Container(
+                    height: query.size.height,
                     margin: EdgeInsets.only(top: query.size.height * 0.15),
-                    child: Column(
+                    child: Stack(
+                      alignment: AlignmentDirectional.bottomCenter,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 24.0),
-                                child: Text(
-                                  languageProvider.currentLanguage ==
-                                          Language.arabic
-                                      ? offer.arabicName
-                                      : offer.englishName,
-                                  style: Theme.of(context).textTheme.titleLarge,
+                        Column(
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: 24.0, left: 15.w, right: 15.w),
+                                  child: Text(
+                                    languageProvider.currentLanguage ==
+                                            Language.arabic
+                                        ? offer.arabicName
+                                        : offer.englishName,
+                                    style:
+                                        Theme.of(context).textTheme.titleLarge,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                  "${appLocalization.offerValidity} ${offer.offerEndDate}"),
-                              Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Center(
-                                    child: Column(
-                                      children: [
-                                        Text(appLocalization.priceAfter,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall),
-                                        Text(
-                                          "SAR ${offer.priceAfter.toString()}",
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium,
-                                        )
-                                      ],
-                                    ),
-                                  )),
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: ClippedOfferImage(
-                                    query: query, offer: offer),
-                              ),
-                            ],
-                          ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 15.w),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Text(
+                                                '${appLocalization.priceBefore}  ${offer.priceBefore.toString()} SAR',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall
+                                                    ?.copyWith(
+                                                      decoration: TextDecoration
+                                                          .lineThrough,
+                                                      color: Colors.grey,
+                                                      fontSize: 15.sp,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    )),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: Text(
+                                                '${appLocalization.priceAfter}  ${offer.priceAfter.toString()} SAR',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodySmall
+                                                    ?.copyWith(
+                                                      color: Colors.black,
+                                                      fontSize: 16.sp,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    )),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                          "${appLocalization.offerValidity} ${offer.offerEndDate}"),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding:
+                                      EdgeInsets.symmetric(vertical: 10.0.w),
+                                  child: ClippedOfferImage(
+                                      query: query, offer: offer),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
+                        Container(
+                          height: 380.h,
+                          width: query.size.width,
+                          decoration: BoxDecoration(
+                              color: Color(0xFFEBC300),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(35.sp),
+                                  topRight: Radius.circular(35.sp))),
+                          child: Padding(
+                            padding:  EdgeInsets.all(20.0.sp),
+                            child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                              Text(
+                                  appLocalization.details,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                    color: Colors.black,
+                                    fontSize: 16.sp,
+                                    fontWeight:
+                                    FontWeight.w500,
+                                  )),
+
+                            ],),
+                          ),
+                        )
                       ],
                     ),
                   ),
@@ -140,14 +202,17 @@ class ClippedOfferImage extends StatelessWidget {
                 "$offersImagesDirectory/${offer.image}"
               ]);
         },
-        child: Container(
-          height: query.size.height * 0.3,
-          width: query.size.width * 0.9,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.fill,
-              image: NetworkImage("$offersImagesDirectory/${offer.image}"),
-            ),
+        child: CachedNetworkImage(
+          height: query.size.height * 0.32,
+          width: query.size.width,
+          imageUrl:"$offersImagesDirectory/${offer.image}",
+          fit: BoxFit.fill,
+          placeholder: (context, url) =>  Center(
+              child: LoadingIndicator(
+                  indicatorType: Indicator.ballBeat,
+                  colors: [primarySwatch])),
+          errorWidget: (context, url, error) => const Icon(
+            Icons.image_not_supported_rounded,color: Colors.grey,
           ),
         ),
       ),

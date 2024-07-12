@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:ewasfa/screens/app_layout_screen.dart';
 import 'package:ewasfa/screens/zoomable_image_screen.dart';
 import 'package:ewasfa/widgets/image_loader.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:logger/logger.dart';
@@ -85,7 +87,8 @@ class _PreviousOrderDetailsScreenState
         child: orderLoaded
             ? Scaffold(
                 extendBodyBehindAppBar: true,
-                appBar: CustomAppBar(pageTitle: appLocalization.orderInfo),
+                appBar: CustomAppBar(pageTitle: appLocalization.orderInfo,
+                ),
                 body: Container(
                   margin: EdgeInsets.only(top: query.size.height * 0.15),
                   child: SingleChildScrollView(
@@ -98,10 +101,14 @@ class _PreviousOrderDetailsScreenState
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(bottom: 24.0),
+                                padding: const EdgeInsets.only(bottom: 30.0),
                                 child: Text(
                                   "${appLocalization.orderId}: ${order.orderId}",
-                                  style: Theme.of(context).textTheme.titleLarge,
+                                  style: Theme.of(context).textTheme.
+                                  titleLarge ?.copyWith(
+                                    color:  Colors.black,
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w700,)
                                 ),
                               ),
                               Padding(

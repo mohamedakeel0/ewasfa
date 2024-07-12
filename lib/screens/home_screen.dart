@@ -1,5 +1,6 @@
 import 'package:ewasfa/providers/offers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -56,9 +57,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   locale: languageProvider.currentLanguage == Language.arabic
                       ? const Locale('ar')
                       : const Locale('en'),
-                  child: Scaffold(
+                  child: Scaffold(backgroundColor: Colors.white,
                     extendBodyBehindAppBar: true,
-                    appBar: CustomAppBar(
+                    appBar: CustomAppBar(actions: [],leading: Container(
+                      color: Colors.white,
+                      width: 20.w,
+                    ),
                       pageTitle: appLocalization.offersPromotions,
                       tabBar: TabBar(
                         indicatorColor: primarySwatch.shade500,

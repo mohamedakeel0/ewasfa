@@ -1,5 +1,6 @@
 import 'package:ewasfa/main.dart';
 import 'package:ewasfa/screens/add_new_address.dart';
+import 'package:ewasfa/screens/app_layout_screen.dart';
 import 'package:ewasfa/screens/notifications_screen.dart';
 import 'package:ewasfa/screens/offer_details_screen.dart';
 import 'package:ewasfa/screens/order/doctor_make_order.dart';
@@ -139,6 +140,7 @@ final Map<String, WidgetBuilder> routingTable = {
   SettingsScreen.routeName: (ctx) => const SettingsScreen(),
   NotificationsScreen.routeName: (ctx) => NotificationsScreen(),
   MyHomePage.routeName: (ctx) => const MyHomePage(),
+  AppLayoutScreen.routeName: (ctx) => const AppLayoutScreen(),
   // Pages within the app
   MyProfileScreen.routeName: (ctx) => MyProfileScreen(),
   NewAddressScreen.routeName: (ctx) => NewAddressScreen(),

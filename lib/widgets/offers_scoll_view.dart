@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ewasfa/screens/offer_details_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
 
@@ -48,16 +49,16 @@ class OffersScrollView extends StatelessWidget {
                   physics: const AlwaysScrollableScrollPhysics(),
                   itemCount: offers.length,
                   itemBuilder: (ctx, index) => SizedBox(
-                    height: 175,
+                    height: 200.h,
                     child: InkWell(
                       onTap: () {
                         Navigator.pushNamed(
                             context, OfferDetailsScreen.routeName,
                             arguments: offers[index]);
                       },
-                      child: Card(                        
+                      child: Card(    elevation: 5,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(25.sp),
                         ),
                         child: Stack(
                           alignment: Alignment.bottomLeft,
@@ -65,7 +66,7 @@ class OffersScrollView extends StatelessWidget {
                             SizedBox(
                               width: double.infinity,
                               child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(25.sp),
                                   child: CachedNetworkImage(
                                     imageUrl:
                                         "$offersImagesDirectory/${offers[index].image}",
@@ -81,7 +82,7 @@ class OffersScrollView extends StatelessWidget {
                                         color: const Color(0x00000000),
                                         image: DecorationImage(
                                           image: imageProvider,
-                                          fit: BoxFit.cover,
+                                          fit: BoxFit.fill,
                                         ),
                                       ),
                                     ),
@@ -100,7 +101,7 @@ class OffersScrollView extends StatelessWidget {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   SizedBox(
-                                    width: query.size.width * 0.6,
+                                    width: query.size.width * 0.5,
                                     child: Text(
                                       languageProvider.currentLanguage ==
                                               Language.arabic
@@ -110,7 +111,9 @@ class OffersScrollView extends StatelessWidget {
                                       style: Theme.of(context)
                                           .textTheme
                                           .titleLarge
-                                          ?.copyWith(
+                                          ?.copyWith(color:  Colors.white,
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.w700,
                                         shadows: [
                                           Shadow(
                                             color:
@@ -128,7 +131,8 @@ class OffersScrollView extends StatelessWidget {
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodySmall
-                                          ?.copyWith(
+                                          ?.copyWith(color:  Colors.white,
+                                        fontSize: 15.sp,
                                         shadows: [
                                           Shadow(
                                             color:

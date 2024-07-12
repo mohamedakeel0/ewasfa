@@ -28,8 +28,9 @@ class LanguageProvider with ChangeNotifier {
     String lang = prefs.getString("language") ?? "na";
     _currentLanguage =
         lang == "Language.english" ? Language.english : Language.arabic;
-    logger.d(
+    print(
         "Retrieved Language: ${_currentLanguage.toString()} from code $lang");
+
     notifyListeners();
   }
 
@@ -50,15 +51,18 @@ class LanguageProvider with ChangeNotifier {
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.fields.addAll(
         requestBody.map((key, value) => MapEntry(key, value.toString())));
-    logger.d(request.toString());
+
+    print(request.toString());
     final response = await request.send();
-    logger.d(response.toString());
+    print(response.toString());
+
     final responseData = await response.stream.transform(utf8.decoder).join();
     final parsedResponse = json.decode(responseData);
     if (parsedResponse['message'] != null) {
       // Display success message to the user
       final msg = parsedResponse['message'];
-      logger.d(msg);
+      print(msg);
+
     }
     _currentLanguage = language;
     notifyListeners();

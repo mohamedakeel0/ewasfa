@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:ewasfa/screens/app_layout_screen.dart';
+import 'package:ewasfa/screens/home_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -73,16 +75,20 @@ class Auth with ChangeNotifier {
     final appLocalization = AppLocalizations.of(ctx!)!;
     if (urlSegment == 'login') {
       String url = '$apiUrl/$urlSegment';
-      logger.d("Logging in to $url ... with credentials $phone & $password");
+      print("Logging in to $url ... with credentials $phone & $password");
       try {
         final response = await http.post(
           Uri.parse(url),
           body: {"phone": phone, "passwords": password},
         );
         final responseData = json.decode(response.body);
-        logger.i(responseData);
+
+        print(responseData);
+
         if (responseData['error'] != 0) {
+
           if (responseData['error'] == 9) {
+
             checkVerified(ctx, phone);
             return 9;
           } else {
@@ -110,20 +116,24 @@ class Auth with ChangeNotifier {
             'firstLogin': DateTime.now().toIso8601String(),
           },
         );
+
         _userId = int.parse(responseData['user_data']['id'].toString());
         checkOrSendToken(_userId);
         _userRank = responseData['user_data']['state'].toString();
-        logger.i("Auth Obtained UserId: $_userId with rank $_userRank");
+        print("Auth Obtained UserId: $_userId with rank $_userRank");
         prefs.setString('userData', userData);
         auth = true;
         guest = false;
+
+        Navigator.pushReplacementNamed(ctx,   AppLayoutScreen.routeName);
         notifyListeners();
         return 0;
       } catch (error) {
         rethrow;
       }
     } else {
-      logger.d("Signing up...");
+      print("Signing up...");
+
       String url = "$apiUrl/$urlSegment";
       final fcmToken = await FirebaseMessaging.instance.getToken();
       final body = {
@@ -135,7 +145,8 @@ class Auth with ChangeNotifier {
         "gender": gender,
         "firebase_token": fcmToken,
       };
-      logger.d(body);
+      print(body);
+
       try {
         final response = await http.post(Uri.parse(url), body: body);
         final responseData = json.decode(response.body);
@@ -171,13 +182,18 @@ class Auth with ChangeNotifier {
         _userId = int.parse(responseData['user_data']['id'].toString());
         checkOrSendToken(_userId);
         _userRank = responseData['user_data']['state'].toString();
-        logger.i("Auth Obtained UserId: $_userId with rank $_userRank");
+        print("Auth Obtained UserId: $_userId with rank $_userRank");
+
         prefs.setString('userData', userData);
         code = responseData['code'];
+
+        Navigator.pushNamed(ctx, OTPScreen.routeName,
+            arguments: [code, phone]);
         notifyListeners();
         return 0;
       } catch (error) {
-        logger.d('test $error');
+        print('test $error');
+
         throw HttpException(appLocalization!.genericError);
       }
     }
@@ -212,7 +228,8 @@ class Auth with ChangeNotifier {
     var resp = await _authenticate(phone.toString(), password.toString(), rememberMe, 'regesteration',
         fname: fname.toString(), lname: lname.toString(), email: email.toString(), gender: gender, ctx: context);
     if (resp != 0) {
-      logger.d(resp);
+      print(resp);
+
       return resp;
     }
     subauth = true;
@@ -237,26 +254,30 @@ class Auth with ChangeNotifier {
   /// If they haven't, redirects the user to the OTP Verification screen to continue OTP verification and sends another request to the remote API to resend the OTP to the user's phone via SMS
   Future<bool> checkVerified(BuildContext context, String phone) async {
     final url = "$apiUrl/get_verify_state?phone=$phone";
-    logger.d(url);
+    print(url);
+
     final response = await http.get(Uri.parse(url));
     final responseData = json.decode(response.body);
-    Logger().d(responseData);
+    print(responseData);
+
     if (responseData['verify_state'].toString() == 'r') {
       final urlVerify = "$apiUrl/resend_OTP?phone=$phone";
       String otpCode = "";
       {
         final response = await http.get(Uri.parse(urlVerify));
         final responseData = json.decode(response.body);
-        logger.d("Retrieving Stored token = ${responseData.toString()}");
+        print("Retrieving Stored token = ${responseData.toString()}");
+
         if (response.statusCode == 200) {
           otpCode = responseData["code"];
           print(otpCode);
         }
       }
       subauth = true;
-      notifyListeners();
+
       Navigator.pushNamed(context, OTPScreen.routeName,
           arguments: [otpCode, phone]);
+      notifyListeners();
       return false;
     } else
       return true;
@@ -304,12 +325,15 @@ class Auth with ChangeNotifier {
   /// If they are not the same, sends another request to the remote API to change the stored FCM token, to allow the API to send FCM notifications to the phone.
   Future<void> checkOrSendToken(int userId) async {
     final fcmToken = await FirebaseMessaging.instance.getToken();
-    logger.d("Retrieved Token: $fcmToken");
+
+    print("Retrieved Token: $fcmToken");
     final url = "$apiUrl/get_token?user_id=$userId";
-    logger.d(url);
+    print( "$apiUrl/get_token?user_id=$userId");
+
     final response = await http.get(Uri.parse(url));
     final responseData = json.decode(response.body);
-    logger.d("Retrieving Stored token = ${responseData.toString()}");
+    print("Retrieving Stored token = ${responseData.toString()}");
+
     if (response.statusCode == 200) {
       final userData = responseData['user_data'];
       final token = userData['firebase_token'] ?? "";
@@ -323,12 +347,14 @@ class Auth with ChangeNotifier {
           },
         );
         final responseData = json.decode(response.body);
-        logger.i("$responseData");
+        print("$responseData");
+
         if (responseData['error'] != 0) {
           throw HttpException(responseData['error']['message']);
         }
       } else {
-        logger.d(token);
+        print(token);
+
       }
     } else {}
   }

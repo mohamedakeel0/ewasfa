@@ -115,8 +115,9 @@ class _AuthCardState extends State<AuthCard>
     });
     var resp;
     try {
-      logger.i(
+      print(
           "phone: ${_authData['phone']}, pw: ${_authData['password']}, remember Me:${_authData['rememberMe']}, ");
+
       if (_authMode == AuthMode.login) {
         resp = await Provider.of<Auth>(ctx, listen: false).login(
             _authData['phone']!.toString(),
@@ -135,7 +136,8 @@ class _AuthCardState extends State<AuthCard>
           context,
         );
       }
-      logger.d(resp);
+      print(resp);
+
 
       if (resp != 0) {
         var errorMessage = AppLocalizations.of(ctx)?.authenticationFailedError;
@@ -308,7 +310,7 @@ class _AuthCardState extends State<AuthCard>
                         return null;
                       },
                       hintText: AppLocalizations.of(context)?.password_label,
-                      textInputType: TextInputType.phone,
+                      textInputType: TextInputType.text,
                       textInputAction: TextInputAction.next,
                       obscureText: isVisibility,
                       suffixIcon: IconButton(
@@ -391,12 +393,17 @@ class _AuthCardState extends State<AuthCard>
                     ),
                   ),
                   if (_isLoading)
-                    const LoadingIndicator(
-                        indicatorType: Indicator.ballBeat,
-                        colors: [primarySwatch])
+                    Center(
+                      child: SizedBox(height: 80.h,
+                        child: const LoadingIndicator(
+                            indicatorType: Indicator.ballBeat,
+                            colors: [primarySwatch]),
+                      ),
+                    )
                   else
                     Padding(
-                      padding: EdgeInsets.only(top:_authMode == AuthMode.login? 30.0.h:15.0,right: 10.w,left: 10.w,),
+                      padding: EdgeInsets.only(top:_authMode == AuthMode.login?
+                      30.0.h:15.0,right: 10.w,left: 10.w,),
                       child: GestureDetector(
                         onTap: () {
                           _submit(context);

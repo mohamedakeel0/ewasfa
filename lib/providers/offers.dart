@@ -60,6 +60,7 @@ class Offers with ChangeNotifier {
           return;
         }
         final List extractedOffers = extractedData.values.toList()[0];
+        print(json.decode(response.body));
         for (int i = 0; i < extractedOffers.length; i++) {
           final Map<String, dynamic> map = extractedOffers[i];
           loadedOffers.add(Offer(

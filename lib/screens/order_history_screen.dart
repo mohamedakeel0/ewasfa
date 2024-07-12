@@ -68,10 +68,13 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
             : const Locale('en'),
         child: Scaffold(
           extendBodyBehindAppBar: true,
-          appBar: CustomAppBar(pageTitle: appLocalization.orderHistory,leading: Container(
-            color: Colors.white,
-            width: 20.w,
-          ),),
+          appBar: CustomAppBar(
+            pageTitle: appLocalization.orderHistory,
+            leading: Container(
+              color: Colors.white,
+              width: 20.w,
+            ),
+          ),
           body: userOrders.isEmpty
               ? Align(
                   alignment: Alignment.center,
@@ -94,55 +97,67 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                     itemCount: userOrders.length,
                     itemBuilder: (context, index) {
                       final order = userOrders[index];
-                      return Card(elevation: 5.0,color: Colors.white,
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                      return Card(
+                        elevation: 5.0,
+                        color: Colors.white,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding:  EdgeInsets.only(top: 10.0.w,right: 10.0.w,left: 10.0.w),
+                              padding: EdgeInsets.only(
+                                  top: 10.0.w, right: 10.0.w, left: 10.0.w),
                               child: Text(
-                               appLocalization.newOrder,
-                                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.black,
-                                  fontSize: 20.sp,
-                                  fontWeight: FontWeight.w500
-                                ),
+                                appLocalization.newOrder,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                        color: Colors.black,
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.w500),
                               ),
                             ),
                             ListTile(
-
                               title: Padding(
-                                padding:  EdgeInsets.only(bottom: 15.0.h),
+                                padding: EdgeInsets.only(bottom: 15.0.h),
                                 child: Text(
                                   '${appLocalization.orderId} ${order.orderId}',
                                   style: Theme.of(context).textTheme.bodySmall,
                                 ),
                               ),
-                              subtitle: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              subtitle: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     '${appLocalization.date} ${order.date} ',
-                                    style: Theme.of(context).textTheme.bodySmall,
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
                                   ),
                                   Text(
                                     ' ${appLocalization.orderStatus} ${order.status} ',
-                                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      color: Colors.red
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodySmall
+                                        ?.copyWith(color: Colors.red),
                                   ),
                                 ],
                               ),
                               trailing: order.status != 'pending'
                                   ? Padding(
-                                    padding: const EdgeInsets.only(bottom: 20.0),
-                                    child: Text(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 20.0),
+                                      child: Text(
                                         '\$ ${order.price} ',
-                                        style: Theme.of(context).textTheme.bodySmall,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall,
                                       ),
-                                  )
+                                    )
                                   : null,
                               onTap: () {
-                                Navigator.pushNamed(
-                                    context, PreviousOrderDetailsScreen.routeName,
+                                Navigator.pushNamed(context,
+                                    PreviousOrderDetailsScreen.routeName,
                                     arguments: userOrders[index]);
                               },
                             ),

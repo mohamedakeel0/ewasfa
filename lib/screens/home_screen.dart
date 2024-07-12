@@ -18,6 +18,7 @@ import 'package:flutter/foundation.dart';
 @Summary('The Screen that displays the offers & Promotions')
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
+
   const HomeScreen({super.key});
 
   @override
@@ -57,12 +58,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   locale: languageProvider.currentLanguage == Language.arabic
                       ? const Locale('ar')
                       : const Locale('en'),
-                  child: Scaffold(backgroundColor: Colors.white,
+                  child: Scaffold(
+                    backgroundColor: Colors.white,
                     extendBodyBehindAppBar: true,
-                    appBar: CustomAppBar(actions: [],leading: Container(
-                      color: Colors.white,
-                      width: 20.w,
-                    ),
+                    appBar: CustomAppBar(
+                      actions: [],
+                      leading: Container(
+                        color: Colors.white,
+                        width: 20.w,
+                      ),
                       pageTitle: appLocalization.offersPromotions,
                       tabBar: TabBar(
                         indicatorColor: primarySwatch.shade500,
@@ -83,18 +87,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     body: LayoutBuilder(builder: (context, constraints) {
                       return offersLoaded
                           ? Container(
-                            margin: EdgeInsets.only(
-                                top: constraints.maxHeight * 0.19),
-                            child: const Align(
-                              alignment: Alignment.topCenter,
-                              child: TabBarView(
-                                children: [
-                                  OffersListView(offerType: true),
-                                  OffersListView(offerType: false),
-                                ],
+                              margin: EdgeInsets.only(
+                                  top: constraints.maxHeight * 0.19),
+                              child: const Align(
+                                alignment: Alignment.topCenter,
+                                child: TabBarView(
+                                  children: [
+                                    OffersListView(offerType: true),
+                                    OffersListView(offerType: false),
+                                  ],
+                                ),
                               ),
-                            ),
-                          )
+                            )
                           : Align(
                               alignment: Alignment.center,
                               child: SizedBox(

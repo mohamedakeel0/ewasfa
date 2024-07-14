@@ -4,7 +4,9 @@ import 'dart:io' show Platform;
 
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:ewasfa/screens/add_new_address.dart';
+import 'package:ewasfa/screens/app_layout_screen.dart';
 import 'package:ewasfa/screens/order/order_failed_screen.dart';
+import 'package:ewasfa/screens/order/place_order_screen.dart';
 import 'package:ewasfa/screens/zoomable_image_screen.dart';
 import 'package:ewasfa/widgets/custom_app_bar.dart';
 import 'package:ewasfa/widgets/custom_text_form_field.dart';
@@ -55,6 +57,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
   bool _branchesPickup = true;
   bool _branchSelected = false;
   bool _branchesLoaded = false;
+  var _isLoading = false;
   int _selectedIndex = -1;
   late Pharmacy selectedPharmacy;
   Map<Pharmacy, double> distBranches = {};
@@ -169,7 +172,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                               horizontal: 5.0),
                                           child: SizedBox(
                                             width: double.infinity,
-                                            height: 150.h,
+                                            height:  _images.length>3?250.h:150.h,
                                             child: CustomScrollView(
                                               slivers: [
                                                 SliverGrid(
@@ -661,7 +664,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                                               .isNotEmpty,
                                                           child:
                                                               GestureDetector(
-                                                            onTap: () {
+                                                            onTap:_isLoading==true?null: () {
                                                               if (_selectedAddress !=
                                                                   null) {
                                                                 // Get the necessary details for the request
@@ -948,7 +951,9 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                     visible:
                                         _branchSelected && _images.isNotEmpty,
                                     child: GestureDetector(
-                                      onTap: () {
+                                      onTap: _isLoading==true?null:() {
+
+
                                         int userId = userid;
                                         //String imagePath = _images?.first.path ?? '';
                                         String promoCode =
@@ -1008,7 +1013,11 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
 
   void _showImageSourceSheet() {
     showModalBottomSheet(
+      backgroundColor: Colors.white,
       context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0.sp)),
+      ),
       builder: (BuildContext context) {
         return SizedBox(
           height: 120,
@@ -1017,7 +1026,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
               const SizedBox(height: 20),
               Text(
                 AppLocalizations.of(context)!.selectSource,
-                style: Theme.of(context).textTheme.titleMedium,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.black,fontWeight: FontWeight.bold,fontSize: 20.sp),
               ),
               const SizedBox(height: 10),
               Row(
@@ -1066,7 +1075,7 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                       });
                       Navigator.of(context).pop();
                     },
-                    icon: const Icon(Icons.photo_album, color: Colors.black),
+                    icon: const Icon(Icons.photo_size_select_actual_outlined, color: Colors.black),
                     label: Text(AppLocalizations.of(context)!.gallery,
                         style:
                             Theme.of(context).textTheme.titleMedium?.copyWith(
@@ -1164,6 +1173,10 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
 
   void makeOrderRequest(
       Map<String, dynamic> requestBody, List<XFile> imageFiles) async {
+
+    setState(() {
+      _isLoading = true;
+    });
     print(imageFiles[0].path);
     const url = '$apiUrl/make_userOrderdetails';
 
@@ -1207,28 +1220,37 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
             print(successMessage);
             // ...
           }
-          Navigator.pushAndRemoveUntil<void>(
-            context,
-            MaterialPageRoute<void>(
-                builder: (BuildContext context) => OrderSuccessfulScreen()),
-            ModalRoute.withName('/'),
-          );
+          //
+
+          setState(() {
+            _isLoading = false;
+          });
+          _showOrderSuccessfulSheet();
+          // Navigator.pushAndRemoveUntil<void>(
+          //   context,
+          //   MaterialPageRoute<void>(
+          //       builder: (BuildContext context) => OrderSuccessfulScreen()),
+          //   ModalRoute.withName('/'),
+          // );
         } else {
           // Order insertion failed
           if (parsedResponse['message'] != null) {
             // Display error message to the user
             final errorMessage = parsedResponse['message'];
             print(errorMessage);
+            setState(() {
+              _isLoading = false;
+            });
+            _showOrderFailedSheet();
             // ...
           }
         }
       } else {
-        Navigator.pushAndRemoveUntil<void>(
-          context,
-          MaterialPageRoute<void>(
-              builder: (BuildContext context) => OrderFailedScreen()),
-          ModalRoute.withName('/'),
-        );
+
+        setState(() {
+          _isLoading = false;
+        });
+        _showOrderFailedSheet();
         // Order request failed
         // Handle the error response here if needed
       }
@@ -1237,5 +1259,154 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
       // Error occurred while making the order request
       // Handle the error here
     }
+  }
+  void _showOrderSuccessfulSheet() {
+    showModalBottomSheet(
+      backgroundColor: Colors.white,
+      context: context,
+      isScrollControlled: false,
+      enableDrag: false,
+      isDismissible: false,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0.sp)),
+      ),
+      builder: (BuildContext context) {
+        final appLocalization = AppLocalizations.of(context)!;
+        final query = MediaQuery.of(context);
+        return Container(height: 250.h,
+          margin: EdgeInsets.only(top: 20.h),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset("lib/assets/images/done_order.png",
+                    fit: BoxFit.contain,
+                  height: 100.h,
+                  width: 100.h,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  appLocalization.orderSuccessMsg,
+                  style: Theme.of(context).textTheme.titleMedium,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+           Row(
+             mainAxisAlignment: MainAxisAlignment.center,
+             children: [
+
+             ElevatedButton(
+               style: ElevatedButton.styleFrom(
+                   textStyle:
+                   Theme.of(context).textTheme.titleMedium?.copyWith(
+                     fontWeight: FontWeight.bold,
+                     color: Colors.black,
+                   ),
+                   backgroundColor: primarySwatch.shade500),
+               onPressed: () {
+                 Navigator.pushNamedAndRemoveUntil(context,
+                     AppLayoutScreen.routeName, (route) => false);
+               },
+               child: Text(appLocalization.placeNewOrder,
+                   style: Theme.of(context).textTheme.titleMedium),
+             ),
+             const SizedBox(width: 16),
+             ElevatedButton(
+               style: ElevatedButton.styleFrom(
+                   textStyle:
+                   Theme.of(context).textTheme.titleMedium?.copyWith(
+                     fontWeight: FontWeight.bold,
+                     color: Colors.black,
+                   ),
+                   backgroundColor: primarySwatch.shade500),
+               onPressed: () {
+                 Navigator.pushNamedAndRemoveUntil(
+                     context, AppLayoutScreen.routeName, (route) => false);
+               },
+               child: Text(appLocalization.homePage,
+                   style: Theme.of(context).textTheme.titleMedium),
+             ),
+           ],)
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showOrderFailedSheet() {
+    showModalBottomSheet(
+      isScrollControlled: false,
+      enableDrag: false,
+      isDismissible: false,
+      backgroundColor: Colors.white,
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0.sp)),
+      ),
+      builder: (BuildContext context) {
+        final appLocalization = AppLocalizations.of(context)!;
+        final query = MediaQuery.of(context);
+        return Container(height: 250.h,
+          margin: EdgeInsets.only(top: 20.h),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Image.asset("lib/assets/images/remove-from-cart.png",
+                    fit: BoxFit.contain,
+                  height: 100.h,
+                  width: 100.h,
+                ),
+
+                const SizedBox(height: 16),
+                Text(
+                  appLocalization.orderFailedMsg,
+                  style: Theme.of(context).textTheme.titleMedium,
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+
+           Row(
+             mainAxisAlignment: MainAxisAlignment.center,
+             children: [
+               ElevatedButton(
+                 style: ElevatedButton.styleFrom(
+                     textStyle:
+                     Theme.of(context).textTheme.titleMedium?.copyWith(
+                       fontWeight: FontWeight.bold,
+                       color: Colors.black,
+                     ),
+                     backgroundColor: primarySwatch.shade500),
+                 onPressed: () {
+                   Navigator.pop(context);
+                 },
+                 child: Text(appLocalization.tryAgain,
+                     style: Theme.of(context).textTheme.titleMedium),
+               ),
+               const SizedBox(width: 16),
+               ElevatedButton(
+                 style: ElevatedButton.styleFrom(
+                     textStyle:
+                     Theme.of(context).textTheme.titleMedium?.copyWith(
+                       fontWeight: FontWeight.bold,
+                       color: Colors.black,
+                     ),
+                     backgroundColor: primarySwatch.shade500),
+                 onPressed: () {
+                   Navigator.pushNamedAndRemoveUntil(
+                       context,  AppLayoutScreen.routeName, (route) => false);
+                 },
+                 child: Text(appLocalization.homePage,
+                     style: Theme.of(context).textTheme.titleMedium),
+               ),
+           ],)
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }

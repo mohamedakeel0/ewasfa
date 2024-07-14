@@ -6,7 +6,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ewasfa/providers/user_data.dart';
 import 'package:ewasfa/screens/zoomable_image_screen.dart';
 import 'package:ewasfa/widgets/custom_app_bar.dart';
+import 'package:ewasfa/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_indicator/loading_indicator.dart';
@@ -171,7 +173,7 @@ class _ReferredOrderScreenState extends State<ReferredOrderScreen> {
     for (var image in images) {
       imageLinks.add("$ordersImagesDirectory/${image['image']}");
     }
-    return Card(
+    return Card(color: Colors.white,
       child: Column(children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -183,15 +185,83 @@ class _ReferredOrderScreenState extends State<ReferredOrderScreen> {
                 ),
           ),
         ),
-        ListTile(
-          title: Text('${appLocalization.orderId}: ${orderDetails!['id']}'),
-          subtitle:
-              Text('${appLocalization.orderStatus}: ${orderDetails['state']}'),
+        if (imageLinks != null && imageLinks.isNotEmpty)
+          CarouselSlider(
+              items: imageLinks
+                  .map((item) => GestureDetector(
+                child: Container(
+                  margin: const EdgeInsets.all(5.0),
+                  child: ClipRRect(
+                    borderRadius:
+                    const BorderRadius.all(Radius.circular(5.0)),
+                    child: Stack(
+                      children: <Widget>[
+                        CachedNetworkImage(
+                          imageUrl: item,
+                          placeholder: (context, url) => const Center(
+                              child: LoadingIndicator(
+                                indicatorType: Indicator.ballPulseSync,
+                                colors: [primaryswatchAccent],
+                              )),
+                          imageBuilder: (context, imageProvider) =>
+                              Container(
+                                width: 1000.0,
+                                decoration: BoxDecoration(
+                                  color: const Color(0x00000000),
+                                  image: DecorationImage(
+                                    image: imageProvider,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                          errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                        ),
+                        Positioned(
+                          bottom: 0.0,
+                          left: 0.0,
+                          right: 0.0,
+                          child: Container(
+                            decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color.fromARGB(200, 0, 0, 0),
+                                  Color.fromARGB(0, 0, 0, 0)
+                                ],
+                                begin: Alignment.bottomCenter,
+                                end: Alignment.topCenter,
+                              ),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 20.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  Navigator.pushNamed(
+                      context, ZoomableImageScreen.routeName,
+                      arguments: [
+                        ZoomableImageSourceType.network,
+                        item
+                      ]);
+                  try {} catch (e) {}
+                },
+              ))
+                  .toList(),
+              options: CarouselOptions()),
+        SizedBox(height: 40.h,
+          child: ListTile(
+            trailing:  Text('${appLocalization.orderStatus}: ${orderDetails!['state']}'),
+            title: Expanded(child: Text('${appLocalization.orderId}: ${orderDetails!['id']}')),
+          ),
         ),
         ListTile(
           title: Text(
               '${appLocalization.pro_description}: ${orderDetails['pro_description']}'),
-          subtitle: Text(
+          trailing: Text(
               '${appLocalization.price}: ${orderDetails['price'] ?? 'N/A'}'),
         ),
         // ListTile(
@@ -199,73 +269,7 @@ class _ReferredOrderScreenState extends State<ReferredOrderScreen> {
         //   subtitle: Text('Doctor ID: ${orderDetails['doctor_id']}'),
         // ),
         // Display images
-        if (imageLinks != null && imageLinks.isNotEmpty)
-          CarouselSlider(
-              items: imageLinks
-                  .map((item) => GestureDetector(
-                        child: Container(
-                          margin: const EdgeInsets.all(5.0),
-                          child: ClipRRect(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(5.0)),
-                            child: Stack(
-                              children: <Widget>[
-                                CachedNetworkImage(
-                                  imageUrl: item,
-                                  placeholder: (context, url) => const Center(
-                                      child: LoadingIndicator(
-                                    indicatorType: Indicator.ballPulseSync,
-                                    colors: [primaryswatchAccent],
-                                  )),
-                                  imageBuilder: (context, imageProvider) =>
-                                      Container(
-                                    width: 1000.0,
-                                    decoration: BoxDecoration(
-                                      color: const Color(0x00000000),
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
-                                ),
-                                Positioned(
-                                  bottom: 0.0,
-                                  left: 0.0,
-                                  right: 0.0,
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Color.fromARGB(200, 0, 0, 0),
-                                          Color.fromARGB(0, 0, 0, 0)
-                                        ],
-                                        begin: Alignment.bottomCenter,
-                                        end: Alignment.topCenter,
-                                      ),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10.0, horizontal: 20.0),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        onTap: () {
-                          Navigator.pushNamed(
-                              context, ZoomableImageScreen.routeName,
-                              arguments: [
-                                ZoomableImageSourceType.network,
-                                item
-                              ]);
-                          try {} catch (e) {}
-                        },
-                      ))
-                  .toList(),
-              options: CarouselOptions())
+
       ]),
     );
   }
@@ -282,460 +286,433 @@ class _ReferredOrderScreenState extends State<ReferredOrderScreen> {
           locale: languageProvider.currentLanguage == Language.arabic
               ? const Locale('ar')
               : const Locale('en'),
-          child: Scaffold(
+          child: Scaffold(backgroundColor: Colors.white,
             extendBodyBehindAppBar: true,
             appBar: CustomAppBar(pageTitle: appLocalization.referredOrder),
-            body: Container(
-                child: Container(
-                    margin: EdgeInsets.only(top: query.size.height * 0.1),
-                    child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Form(
-                          key: _formKey,
-                          child: Scrollbar(
-                            thumbVisibility: true,
-                            child: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Visibility(
-                                    visible: !orderSelected,
-                                    child: Column(
-                                      children: [
-                                        TextFormField(
-                                          controller: _codeController,
-                                          decoration: InputDecoration(
-                                            labelText:
-                                                appLocalization.enterCode,
-                                          ),
-                                          validator: (value) {
-                                            if (value!.isEmpty) {
-                                              return appLocalization.enterCode;
-                                            }
-                                            return null;
-                                          },
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                                textStyle: Theme.of(context)
-                                                    .textTheme
-                                                    .titleMedium
-                                                    ?.copyWith(
-                                                      color:
-                                                          Colors.grey.shade700,
+            body: Container(color: Colors.white,
+                height:orderSelected? query.size.height:565.h,
+                margin: orderSelected? EdgeInsets.only(top: query.size.height * 0.088):EdgeInsets.zero,
+                child: Padding(
+                    padding:  EdgeInsets.all(orderSelected?0.0:16.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Visibility(
+                        visible: !orderSelected,
+                        replacement: SingleChildScrollView(
+                          child: SizedBox(
+                            height: query.size.height,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+
+                                const SizedBox(height: 16.0),
+                                if (_isLoading)
+                                  const LoadingIndicator(
+                                      indicatorType: Indicator.ballBeat,
+                                      colors: [primarySwatch])
+                                else if (orderSelected)
+                                  SizedBox(
+                                      height: query.size.height * 0.9,
+                                      child: ListView(
+                                          padding: EdgeInsets.zero,
+                                          children: [
+                                            _buildOrderDetailsCard(
+                                                appLocalization),
+                                            Card(color: Colors.white,
+                                              child: Padding(
+                                                padding:
+                                                     EdgeInsets
+                                                        .only(bottom: 15.h,right: 15.w,left: 15.w),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .stretch,
+                                                  children: [
+                                                    Visibility(
+                                                        visible:
+                                                            _isApiResponseSuccess,
+                                                        child: Padding(
+                                                          padding: const EdgeInsets
+                                                                  .only(
+                                                              top: 10.0,
+                                                              bottom:
+                                                                  10.0),
+                                                          child: Text(
+                                                              appLocalization
+                                                                  .selectAddressBranch),
+                                                        )),
+                                                    TextFormField(
+                                                        controller:
+                                                            _promoCodeController,
+                                                        decoration:
+                                                            InputDecoration(
+                                                          labelText:
+                                                              appLocalization
+                                                                  .promocode,
+                                                          border:
+                                                              const OutlineInputBorder(),
+                                                        )),
+                                                    const SizedBox(
+                                                        height: 20),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceEvenly,
+                                                      children: [
+                                                        Expanded(
+                                                          child:
+                                                              RadioListTile(
+                                                            title: Text(
+                                                                appLocalization
+                                                                    .pickFromStore,
+                                                                style: Theme.of(context)
+                                                                    .textTheme
+                                                                    .bodyMedium),
+                                                            value:
+                                                                'store',
+                                                            groupValue:
+                                                                _deliveryType,
+                                                            onChanged:
+                                                                (value) {
+                                                              setState(
+                                                                  () {
+                                                                _branchesPickup =
+                                                                    true;
+                                                                _deliveryType =
+                                                                    value
+                                                                        as String;
+                                                              });
+                                                            },
+                                                          ),
+                                                        ),
+                                                        Expanded(
+                                                          child:
+                                                              RadioListTile(
+                                                            title: Text(
+                                                                appLocalization
+                                                                    .delivery,
+                                                                style: Theme.of(context)
+                                                                    .textTheme
+                                                                    .bodyMedium),
+                                                            value:
+                                                                'delivery',
+                                                            groupValue:
+                                                                _deliveryType,
+                                                            onChanged:
+                                                                (value) {
+                                                              setState(
+                                                                  () {
+                                                                _selectedIndex =
+                                                                    -1;
+                                                                _branchesPickup =
+                                                                    false;
+                                                                _branchSelected =
+                                                                    false;
+                                                                _deliveryType =
+                                                                    value
+                                                                        as String;
+                                                              });
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                backgroundColor:
-                                                    primarySwatch.shade500),
-                                            onPressed: _submitForm,
-                                            child: Text(
-                                              appLocalization.submit,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium
-                                                  ?.copyWith(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.black,
-                                                  ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  const SizedBox(height: 16.0),
-                                  if (_isLoading)
-                                    const LoadingIndicator(
-                                        indicatorType: Indicator.ballBeat,
-                                        colors: [primarySwatch])
-                                  else
-                                    SizedBox(
-                                        height: query.size.height * 0.8,
-                                        child: ListView(
-                                            padding: EdgeInsets.zero,
-                                            children: [
-                                              _buildOrderDetailsCard(
-                                                  appLocalization),
-                                              Card(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets
-                                                          .all(16),
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .stretch,
-                                                    children: [
-                                                      Visibility(
-                                                          visible:
-                                                              _isApiResponseSuccess,
-                                                          child: Padding(
-                                                            padding: const EdgeInsets
-                                                                    .only(
-                                                                top: 10.0,
-                                                                bottom:
-                                                                    10.0),
-                                                            child: Text(
-                                                                appLocalization
-                                                                    .selectAddressBranch),
-                                                          )),
-                                                      TextFormField(
-                                                          controller:
-                                                              _promoCodeController,
-                                                          decoration:
-                                                              InputDecoration(
-                                                            labelText:
-                                                                appLocalization
-                                                                    .promocode,
-                                                            border:
-                                                                const OutlineInputBorder(),
-                                                          )),
-                                                      const SizedBox(
-                                                          height: 20),
-                                                      Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceEvenly,
+                                                    // Visibility(
+                                                    //     visible:
+                                                    //         _isApiResponseSuccess,
+                                                    //     child: Padding(
+                                                    //       padding: const EdgeInsets
+                                                    //               .only(
+                                                    //           top: 10.0,
+                                                    //           bottom:
+                                                    //               10.0),
+                                                    //       child: Text(
+                                                    //           appLocalization
+                                                    //               .addPrescription),
+                                                    //     )),
+                                                    Visibility(
+                                                      visible:
+                                                          _deliveryType ==
+                                                              'delivery',
+                                                      child: Column(
                                                         children: [
-                                                          Expanded(
-                                                            child:
-                                                                RadioListTile(
-                                                              title: Text(
-                                                                  appLocalization
-                                                                      .pickFromStore,
-                                                                  style: Theme.of(context)
-                                                                      .textTheme
-                                                                      .bodyMedium),
-                                                              value:
-                                                                  'store',
-                                                              groupValue:
-                                                                  _deliveryType,
-                                                              onChanged:
-                                                                  (value) {
-                                                                setState(
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceEvenly,
+                                                            children: [
+                                                              ElevatedButton(
+                                                                style: ElevatedButton.styleFrom(
+                                                                    backgroundColor:
+                                                                        primarySwatch.shade500),
+                                                                onPressed:
                                                                     () {
-                                                                  _branchesPickup =
-                                                                      true;
-                                                                  _deliveryType =
-                                                                      value
-                                                                          as String;
-                                                                });
-                                                              },
-                                                            ),
-                                                          ),
-                                                          Expanded(
-                                                            child:
-                                                                RadioListTile(
-                                                              title: Text(
-                                                                  appLocalization
-                                                                      .delivery,
-                                                                  style: Theme.of(context)
-                                                                      .textTheme
-                                                                      .bodyMedium),
-                                                              value:
-                                                                  'delivery',
-                                                              groupValue:
-                                                                  _deliveryType,
-                                                              onChanged:
-                                                                  (value) {
-                                                                setState(
+                                                                  showAddressSheet(
+                                                                      appLocalization);
+                                                                },
+                                                                child: Text(
+                                                                    appLocalization.chooseAddress,
+                                                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                                          fontWeight: FontWeight.bold,
+                                                                          color: Colors.black,
+                                                                        )),
+                                                              ),
+                                                              ElevatedButton(
+                                                                style: ElevatedButton.styleFrom(
+                                                                    backgroundColor:
+                                                                        primarySwatch.shade500),
+                                                                onPressed:
                                                                     () {
-                                                                  _selectedIndex =
-                                                                      -1;
-                                                                  _branchesPickup =
-                                                                      false;
-                                                                  _branchSelected =
-                                                                      false;
-                                                                  _deliveryType =
-                                                                      value
-                                                                          as String;
-                                                                });
-                                                              },
-                                                            ),
+                                                                  Navigator.of(context)
+                                                                      .pushNamed(NewAddressScreen.routeName);
+                                                                },
+                                                                child: Text(
+                                                                    appLocalization.addNewAddress,
+                                                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                                                          fontWeight: FontWeight.bold,
+                                                                          color: Colors.black,
+                                                                        )),
+                                                              ),
+                                                            ],
                                                           ),
+                                                          if (_selectedAddress !=
+                                                              null) ...[
+                                                            const SizedBox(
+                                                                height:
+                                                                    20),
+                                                            Text(
+                                                                '${appLocalization.city} ${_selectedAddress?.city}'),
+                                                            const SizedBox(
+                                                                height:
+                                                                    8),
+                                                            Text(
+                                                                '${appLocalization.addressLine} ${_selectedAddress?.addressLine}'),
+                                                            const SizedBox(
+                                                                height:
+                                                                    8),
+                                                            Text(
+                                                                '${appLocalization.landmark} ${_selectedAddress?.landmark}'),
+                                                            ElevatedButton(
+                                                                style: ElevatedButton.styleFrom(
+                                                                    textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                                          fontWeight: FontWeight.bold,
+                                                                          color: Colors.black,
+                                                                        ),
+                                                                    backgroundColor: primarySwatch.shade500),
+                                                                onPressed: () async {
+                                                                  if (_selectedAddress !=
+                                                                      null) {
+                                                                    // Get the necessary details for the request
+                                                                    int userId =
+                                                                        userid;
+                                                                    //String imagePath = _images?.first.path ?? '';
+                                                                    String
+                                                                        promoCode =
+                                                                        _promoCodeController.text;
+                                                                    bool
+                                                                        isDelivery =
+                                                                        _deliveryType == 'delivery';
+                                                                    int addressId = isDelivery
+                                                                        ? _selectedAddress!.id
+                                                                        : 0;
+                                                                    String address = isDelivery
+                                                                        ? _selectedAddress!.addressLine
+                                                                        : '';
+                                                                    String city = isDelivery
+                                                                        ? _selectedAddress!.city
+                                                                        : '';
+                                                                    double longitude = isDelivery
+                                                                        ? _selectedAddress!.longitude
+                                                                        : 0.0;
+                                                                    double latitude = isDelivery
+                                                                        ? _selectedAddress!.latitude
+                                                                        : 0.0;
+                                                                    String landmark = isDelivery
+                                                                        ? _selectedAddress!.landmark
+                                                                        : '';
+                                                                    int referredUserId =
+                                                                        1;
+
+                                                                    // Create the request body
+                                                                    Map<String, dynamic>
+                                                                        requestBody =
+                                                                        {
+                                                                      'user_id': userId,
+                                                                      // 'image': imagePath,
+                                                                      'promo_code': promoCode,
+                                                                      'delivery': isDelivery ? 1 : 0,
+                                                                      'address_id': addressId,
+                                                                      'address': address,
+                                                                      'city': city,
+                                                                      'long': longitude,
+                                                                      'lat': latitude,
+                                                                      'land_mark': landmark,
+                                                                      'refered': referredUserId,
+                                                                    };
+
+                                                                    makeOrderRequest(requestBody,
+                                                                        _orderData!['image']);
+                                                                  }
+                                                                },
+                                                                child: Text(appLocalization.placeOrder,
+                                                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                                          fontWeight: FontWeight.bold,
+                                                                          color: Colors.black,
+                                                                        ))),
+                                                          ],
                                                         ],
                                                       ),
-                                                      Visibility(
-                                                          visible:
+                                                    ),
+                                                    Visibility(
+                                                      visible:
+                                                          _branchSelected &&
                                                               _isApiResponseSuccess,
-                                                          child: Padding(
-                                                            padding: const EdgeInsets
-                                                                    .only(
-                                                                top: 10.0,
-                                                                bottom:
-                                                                    10.0),
-                                                            child: Text(
-                                                                appLocalization
-                                                                    .addPrescription),
-                                                          )),
-                                                      Visibility(
-                                                        visible:
-                                                            _deliveryType ==
-                                                                'delivery',
-                                                        child: Column(
-                                                          children: [
-                                                            Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .spaceEvenly,
-                                                              children: [
-                                                                ElevatedButton(
-                                                                  style: ElevatedButton.styleFrom(
-                                                                      backgroundColor:
-                                                                          primarySwatch.shade500),
-                                                                  onPressed:
-                                                                      () {
-                                                                    showAddressSheet(
-                                                                        appLocalization);
-                                                                  },
-                                                                  child: Text(
-                                                                      appLocalization.chooseAddress,
-                                                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                                            fontWeight: FontWeight.bold,
-                                                                            color: Colors.black,
-                                                                          )),
-                                                                ),
-                                                                ElevatedButton(
-                                                                  style: ElevatedButton.styleFrom(
-                                                                      backgroundColor:
-                                                                          primarySwatch.shade500),
-                                                                  onPressed:
-                                                                      () {
-                                                                    Navigator.of(context)
-                                                                        .pushNamed(NewAddressScreen.routeName);
-                                                                  },
-                                                                  child: Text(
-                                                                      appLocalization.addNewAddress,
-                                                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                                            fontWeight: FontWeight.bold,
-                                                                            color: Colors.black,
-                                                                          )),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            if (_selectedAddress !=
-                                                                null) ...[
-                                                              const SizedBox(
-                                                                  height:
-                                                                      20),
-                                                              Text(
-                                                                  '${appLocalization.city} ${_selectedAddress?.city}'),
-                                                              const SizedBox(
-                                                                  height:
-                                                                      8),
-                                                              Text(
-                                                                  '${appLocalization.addressLine} ${_selectedAddress?.addressLine}'),
-                                                              const SizedBox(
-                                                                  height:
-                                                                      8),
-                                                              Text(
-                                                                  '${appLocalization.landmark} ${_selectedAddress?.landmark}'),
-                                                              ElevatedButton(
-                                                                  style: ElevatedButton.styleFrom(
-                                                                      textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                                            fontWeight: FontWeight.bold,
-                                                                            color: Colors.black,
-                                                                          ),
-                                                                      backgroundColor: primarySwatch.shade500),
-                                                                  onPressed: () async {
-                                                                    if (_selectedAddress !=
-                                                                        null) {
-                                                                      // Get the necessary details for the request
-                                                                      int userId =
-                                                                          userid;
-                                                                      //String imagePath = _images?.first.path ?? '';
-                                                                      String
-                                                                          promoCode =
-                                                                          _promoCodeController.text;
-                                                                      bool
-                                                                          isDelivery =
-                                                                          _deliveryType == 'delivery';
-                                                                      int addressId = isDelivery
-                                                                          ? _selectedAddress!.id
-                                                                          : 0;
-                                                                      String address = isDelivery
-                                                                          ? _selectedAddress!.addressLine
-                                                                          : '';
-                                                                      String city = isDelivery
-                                                                          ? _selectedAddress!.city
-                                                                          : '';
-                                                                      double longitude = isDelivery
-                                                                          ? _selectedAddress!.longitude
-                                                                          : 0.0;
-                                                                      double latitude = isDelivery
-                                                                          ? _selectedAddress!.latitude
-                                                                          : 0.0;
-                                                                      String landmark = isDelivery
-                                                                          ? _selectedAddress!.landmark
-                                                                          : '';
-                                                                      int referredUserId =
-                                                                          1;
-
-                                                                      // Create the request body
-                                                                      Map<String, dynamic>
-                                                                          requestBody =
-                                                                          {
-                                                                        'user_id': userId,
-                                                                        // 'image': imagePath,
-                                                                        'promo_code': promoCode,
-                                                                        'delivery': isDelivery ? 1 : 0,
-                                                                        'address_id': addressId,
-                                                                        'address': address,
-                                                                        'city': city,
-                                                                        'long': longitude,
-                                                                        'lat': latitude,
-                                                                        'land_mark': landmark,
-                                                                        'refered': referredUserId,
-                                                                      };
-
-                                                                      makeOrderRequest(requestBody,
-                                                                          _orderData!['image']);
-                                                                    }
-                                                                  },
-                                                                  child: Text(appLocalization.placeOrder,
-                                                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                                            fontWeight: FontWeight.bold,
-                                                                            color: Colors.black,
-                                                                          ))),
-                                                            ],
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Visibility(
-                                                        visible:
-                                                            _branchSelected &&
-                                                                _isApiResponseSuccess,
-                                                        child: ElevatedButton(
-                                                            style: ElevatedButton.styleFrom(
-                                                                textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                                      fontWeight:
-                                                                          FontWeight.bold,
-                                                                      color:
-                                                                          Colors.black,
-                                                                    ),
-                                                                backgroundColor: primarySwatch.shade500),
-                                                            onPressed: () async {
-                                                              int userId =
-                                                                  userid;
-                                                              String
-                                                                  promoCode =
-                                                                  _promoCodeController
-                                                                      .text;
-                                                              int referredUserId =
-                                                                  1;
-                                                              Map<String,
-                                                                      dynamic>
-                                                                  requestBody =
-                                                                  {
-                                                                'user_id':
-                                                                    userId,
-                                                                'promo_code':
-                                                                    promoCode,
-                                                                'delivery':
-                                                                    1,
-                                                                'address_id':
-                                                                    selectedPharmacy
-                                                                        .address
-                                                                        .id,
-                                                                'address': selectedPharmacy
-                                                                    .address
-                                                                    .addressLine,
-                                                                'city': selectedPharmacy
-                                                                    .address
-                                                                    .city,
-                                                                'long': selectedPharmacy
-                                                                    .address
-                                                                    .longitude,
-                                                                'lat': selectedPharmacy
-                                                                    .address
-                                                                    .latitude,
-                                                                'land_mark': selectedPharmacy
-                                                                    .address
-                                                                    .landmark,
-                                                                'refered':
-                                                                    referredUserId,
-                                                              };
-                                                              makeOrderRequest(
-                                                                  requestBody,
-                                                                  _orderData![
-                                                                      'image']);
-                                                            },
-                                                            child: Text(appLocalization.placeOrder,
-                                                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                                                      fontWeight:
-                                                                          FontWeight.bold,
-                                                                      color:
-                                                                          Colors.black,
-                                                                    ))),
-                                                      )
-                                                    ],
-                                                  ),
+                                                      child: ElevatedButton(
+                                                          style: ElevatedButton.styleFrom(
+                                                              textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight.bold,
+                                                                    color:
+                                                                        Colors.black,
+                                                                  ),
+                                                              backgroundColor: primarySwatch.shade500),
+                                                          onPressed: () async {
+                                                            int userId =
+                                                                userid;
+                                                            String
+                                                                promoCode =
+                                                                _promoCodeController
+                                                                    .text;
+                                                            int referredUserId =
+                                                                1;
+                                                            Map<String,
+                                                                    dynamic>
+                                                                requestBody =
+                                                                {
+                                                              'user_id':
+                                                                  userId,
+                                                              'promo_code':
+                                                                  promoCode,
+                                                              'delivery':
+                                                                  1,
+                                                              'address_id':
+                                                                  selectedPharmacy
+                                                                      .address
+                                                                      .id,
+                                                              'address': selectedPharmacy
+                                                                  .address
+                                                                  .addressLine,
+                                                              'city': selectedPharmacy
+                                                                  .address
+                                                                  .city,
+                                                              'long': selectedPharmacy
+                                                                  .address
+                                                                  .longitude,
+                                                              'lat': selectedPharmacy
+                                                                  .address
+                                                                  .latitude,
+                                                              'land_mark': selectedPharmacy
+                                                                  .address
+                                                                  .landmark,
+                                                              'refered':
+                                                                  referredUserId,
+                                                            };
+                                                            makeOrderRequest(
+                                                                requestBody,
+                                                                _orderData![
+                                                                    'image']);
+                                                          },
+                                                          child: Text(appLocalization.placeOrder,
+                                                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight.bold,
+                                                                    color:
+                                                                        Colors.black,
+                                                                  ))),
+                                                    )
+                                                  ],
                                                 ),
                                               ),
-                                              Visibility(
-                                                  visible:
-                                                      _branchesPickup,
-                                                  child: Consumer<
-                                                          Branches>(
-                                                      builder: (context,
-                                                          branchesProvider,
-                                                          _) {
-                                                    return Builder(
-                                                        builder: (
-                                                      context,
-                                                    ) {
-                                                      if (branchesProvider
-                                                          .isBranchesLoaded()) {
-                                                        final List<
-                                                                Pharmacy>
-                                                            branches =
-                                                            branchesProvider
-                                                                .getBranches();
-                                                        if (branches
-                                                            .isEmpty) {
-                                                          return Center(
-                                                              child: Text(
-                                                                  appLocalization
-                                                                      .noBranchesMsg));
-                                                        } else {
-                                                          return Center(
+                                            ),
+                                            Visibility(
+                                                visible:
+                                                    _branchesPickup,
+                                                child: Consumer<
+                                                        Branches>(
+                                                    builder: (context,
+                                                        branchesProvider,
+                                                        _) {
+                                                  return Builder(
+                                                      builder: (
+                                                    context,
+                                                  ) {
+                                                    if (branchesProvider
+                                                        .isBranchesLoaded()) {
+                                                      final List<
+                                                              Pharmacy>
+                                                          branches =
+                                                          branchesProvider
+                                                              .getBranches();
+                                                      if (branches
+                                                          .isEmpty) {
+                                                        return Center(
+                                                            child: Text(
+                                                                appLocalization
+                                                                    .noBranchesMsg));
+                                                      } else {
+                                                        return Center(
+                                                          child:
+                                                              Padding(
+                                                            padding: const EdgeInsets
+                                                                    .only(
+                                                                top:
+                                                                    10.0),
                                                             child:
-                                                                Padding(
-                                                              padding: const EdgeInsets
-                                                                      .only(
-                                                                  top:
-                                                                      10.0),
-                                                              child:
-                                                                  SizedBox(
-                                                                width: query
-                                                                        .size
-                                                                        .width *
-                                                                    0.9,
-                                                                height: query
-                                                                        .size
-                                                                        .height *
-                                                                    0.3,
-                                                                child: ListView
-                                                                    .builder(
-                                                                  padding:
-                                                                      EdgeInsets.zero,
-                                                                  itemCount:
-                                                                      branches.length,
-                                                                  itemBuilder:
-                                                                      (context,
-                                                                          index) {
-                                                                    final pharmacy =
-                                                                        branches[index];
-                                                                    final name = languageProvider.currentLanguage == Language.arabic
-                                                                        ? pharmacy.arabicName
-                                                                        : pharmacy.englishName;
-                                                                    final addressLine = pharmacy
-                                                                        .address
-                                                                        .addressLine;
-                                                                    final isSelected =
-                                                                        _selectedIndex == index;
-                                                                    return ListTile(
+                                                                Container(color: Colors.white,
+                                                              width: query
+                                                                      .size
+                                                                      .width *
+                                                                  0.9,
+                                                              height: query
+                                                                      .size
+                                                                      .height *
+                                                                  0.3,
+                                                              child: ListView
+                                                                  .builder(physics: NeverScrollableScrollPhysics(),
+                                                                padding:
+                                                                    EdgeInsets.zero,
+                                                                itemCount:
+                                                                    branches.length,
+                                                                itemBuilder:
+                                                                    (context,
+                                                                        index) {
+                                                                  final pharmacy =
+                                                                      branches[index];
+                                                                  final name = languageProvider.currentLanguage == Language.arabic
+                                                                      ? pharmacy.arabicName
+                                                                      : pharmacy.englishName;
+                                                                  final addressLine = pharmacy
+                                                                      .address
+                                                                      .addressLine;
+                                                                  final isSelected =
+                                                                      _selectedIndex == index;
+                                                                  return Container(
+                                                                    clipBehavior: Clip
+                                                                        .antiAliasWithSaveLayer,
+                                                                    decoration: BoxDecoration(
+                                                                      color: !isSelected
+                                                                          ? Theme.of(context)
+                                                                          .listTileTheme
+                                                                          .tileColor
+                                                                          : primarySwatch
+                                                                          .shade400,
+                                                                      borderRadius:
+                                                                      BorderRadius.circular(
+                                                                          20.sp),
+                                                                    ),
+                                                                    alignment: Alignment.center,
+                                                                    height: 80.h,
+                                                                    child: ListTile(
                                                                       leading:
                                                                           const Icon(Icons.local_pharmacy),
                                                                       trailing: branches[index].address.latitude == 0.0
@@ -797,35 +774,117 @@ class _ReferredOrderScreenState extends State<ReferredOrderScreen> {
                                                                           }
                                                                         });
                                                                       },
-                                                                    );
-                                                                  },
-                                                                ),
+                                                                    ),
+                                                                  );
+                                                                },
                                                               ),
                                                             ),
-                                                          );
-                                                        }
-                                                      } else {
-                                                        return Center(
-                                                          child: Transform
-                                                              .scale(
-                                                            scale: 0.5,
-                                                            child: const LoadingIndicator(
-                                                                indicatorType:
-                                                                    Indicator.ballBeat,
-                                                                colors: [
-                                                                  primarySwatch
-                                                                ]),
                                                           ),
                                                         );
                                                       }
-                                                    });
-                                                  }))
-                                            ]))
-                                ],
-                              ),
+                                                    } else {
+                                                      return Center(
+                                                        child: Transform
+                                                            .scale(
+                                                          scale: 0.5,
+                                                          child: const LoadingIndicator(
+                                                              indicatorType:
+                                                                  Indicator.ballBeat,
+                                                              colors: [
+                                                                primarySwatch
+                                                              ]),
+                                                        ),
+                                                      );
+                                                    }
+                                                  });
+                                                }))
+                                          ]))else SizedBox()
+                              ],
                             ),
                           ),
-                        )))),
+                        ),
+                        child:  Padding(
+                          padding:  EdgeInsets.only(top: 330.h,),
+                          child: Container(
+
+
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius:
+                              BorderRadius.circular(15.sp),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.4),
+                                  spreadRadius: 5,
+                                  blurRadius: 4,
+                                  offset: Offset(0,
+                                      2), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding:  EdgeInsets.only(top: 15.0.h,right: 20.w,left: 20.w
+                                  ),
+                                  child: CustomTextFormField(
+                                    enabledBorder:  OutlineInputBorder(
+                                                              borderRadius: BorderRadius.circular(10.sp),
+                                                                borderSide: BorderSide(
+
+                                    color:Colors.black.withOpacity(0.4),
+                                    width: 2.5.sp )),
+                                    controller: _codeController,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return appLocalization.enterCode;
+                                      }
+                                      return null;
+                                    },
+                                    hintText:
+                                    appLocalization.enterCode,
+                                    textInputType: TextInputType.text,
+                                    textInputAction: TextInputAction.next,
+                                    textCapitalization: TextCapitalization.words,
+                                  ),
+                                ),
+
+                                Padding(
+                                  padding:  EdgeInsets.only(right: 10.0.w,left:10.0.w,top:15.0.h  ),
+                                  child: GestureDetector(
+                                    onTap: _submitForm,
+                                    child: Container(
+                                      height: 60.h,
+                                      width: MediaQuery.of(context).size.width - 80,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15.sp),
+                                          color: Colors.black,
+                                          border: Border.all(color: Colors.black, width: 3)),
+                                      child: Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Text(
+                                              appLocalization.submit,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 17.sp)),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ))),
           ));
     });
   }

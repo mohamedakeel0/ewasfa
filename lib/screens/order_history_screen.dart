@@ -91,77 +91,80 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                         ),
                 )
               : Container(
-                  margin: EdgeInsets.only(top: query.size.height * 0.15),
+                  margin: EdgeInsets.only(top: query.size.height * 0.1),
                   child: ListView.builder(
                     padding: EdgeInsets.zero,
                     itemCount: userOrders.length,
                     itemBuilder: (context, index) {
                       final order = userOrders[index];
-                      return Card(
-                        elevation: 5.0,
-                        color: Colors.white,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: 10.0.w, right: 10.0.w, left: 10.0.w),
-                              child: Text(
-                                appLocalization.newOrder,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                        color: Colors.black,
-                                        fontSize: 20.sp,
-                                        fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            ListTile(
-                              title: Padding(
-                                padding: EdgeInsets.only(bottom: 15.0.h),
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4.0,horizontal: 8.0),
+                        child: Card(
+                          elevation: 5.0,
+                          color: Colors.white,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: 10.0.w, right: 10.0.w, left: 10.0.w),
                                 child: Text(
-                                  '${appLocalization.orderId} ${order.orderId}',
-                                  style: Theme.of(context).textTheme.bodySmall,
+                                  appLocalization.newOrder,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(
+                                          color: Colors.black,
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.w500),
                                 ),
                               ),
-                              subtitle: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '${appLocalization.date} ${order.date} ',
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall,
+                              ListTile(
+                                title: Padding(
+                                  padding: EdgeInsets.only(bottom: 15.0.h),
+                                  child: Text(
+                                    '${appLocalization.orderId} ${order.orderId}',
+                                    style: Theme.of(context).textTheme.bodySmall,
                                   ),
-                                  Text(
-                                    ' ${appLocalization.orderStatus} ${order.status} ',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall
-                                        ?.copyWith(color: Colors.red),
-                                  ),
-                                ],
+                                ),
+                                subtitle: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '${appLocalization.date} ${order.date} ',
+                                      style:
+                                          Theme.of(context).textTheme.bodySmall,
+                                    ),
+                                    Text(
+                                      ' ${appLocalization.orderStatus} ${order.status} ',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(color: Colors.red),
+                                    ),
+                                  ],
+                                ),
+                                trailing: order.status != 'pending'
+                                    ? Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 20.0),
+                                        child: Text(
+                                          '\$ ${order.price} ',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall,
+                                        ),
+                                      )
+                                    : null,
+                                onTap: () {
+                                  Navigator.pushNamed(context,
+                                      PreviousOrderDetailsScreen.routeName,
+                                      arguments: userOrders[index]);
+                                },
                               ),
-                              trailing: order.status != 'pending'
-                                  ? Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 20.0),
-                                      child: Text(
-                                        '\$ ${order.price} ',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall,
-                                      ),
-                                    )
-                                  : null,
-                              onTap: () {
-                                Navigator.pushNamed(context,
-                                    PreviousOrderDetailsScreen.routeName,
-                                    arguments: userOrders[index]);
-                              },
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     },

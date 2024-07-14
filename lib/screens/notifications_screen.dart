@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:ewasfa/providers/auth.dart';
 import 'package:ewasfa/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:loading_indicator/loading_indicator.dart';
@@ -71,7 +72,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         builder: (context, authData, languageProvider, child) {
       return Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: CustomAppBar(pageTitle: appLocalization.notifications),
+        appBar: CustomAppBar(pageTitle: appLocalization.notifications,
+          leading: Container(
+          color: Colors.white,
+          width: 20.w,
+        ),
+        ),
         body: Container(
           child: Consumer<Auth>(
             builder: (context, authData, child) {
@@ -100,6 +106,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     );
                   } else if (snapshot.hasData) {
                     final notifications = snapshot.data!;
+                    print('0000000000000000000000000');
+                    snapshot.data!.forEach((element) {
+                      print(element);
+                    });
                     return notifications.isEmpty
                         ? Align(
                             alignment: Alignment.center,
@@ -114,22 +124,26 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                 child: SingleChildScrollView(
                                   child: Column(
                                     children: notifications
-                                        .map((notification) => Card(
-                                              child: ListTile(
-                                                title: Text(
-                                                  notification['title'],
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .titleMedium,
-                                                ),
-                                                subtitle: Text(
-                                                  notification['body'],
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodySmall,
+                                        .map((notification) => Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Card(  elevation: 5.0,
+                                                                                color: Colors.white,
+                                                child: ListTile(
+                                                  title: Text(
+                                                    notification['title'],
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleMedium,
+                                                  ),
+                                                  subtitle: Text(
+                                                    notification['body'],
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodySmall,
+                                                  ),
                                                 ),
                                               ),
-                                            ))
+                                        ))
                                         .toList(),
                                   ),
                                 ),
@@ -140,7 +154,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                 child: Align(
                                   alignment: Alignment.topRight,
                                   child: IconButton(
-                                    icon: const Icon(Icons.clear),
+                                    icon: const Icon(Icons.delete_forever_outlined,color: Colors.red,),
                                     onPressed: () =>
                                         clearNotifications(authData.userId),
                                   ),

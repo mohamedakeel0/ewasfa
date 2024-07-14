@@ -290,9 +290,10 @@ class _PreviousOrderDetailsScreenState
                                 padding: const EdgeInsets.all(5.0),
                                 child: imagesLoaded
                                     ? SizedBox(
-                                        height: query.size.height * 0.45,
+                                        height:query.size.height * 0.3*images.length,
                                         width: query.size.width * 0.95,
                                         child: ListView.builder(
+                                          physics: NeverScrollableScrollPhysics(),
                                           padding: EdgeInsets.zero,
                                           itemCount: images.length,
                                           itemBuilder: (context, index) {

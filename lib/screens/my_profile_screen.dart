@@ -5,6 +5,7 @@ import 'package:ewasfa/screens/auth_screen.dart';
 import 'package:ewasfa/screens/zoomable_image_screen.dart';
 import 'package:ewasfa/widgets/address_book.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 import 'package:provider/provider.dart';
@@ -91,8 +92,13 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
           : const Locale('en'),
       child: Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: CustomAppBar(
+        appBar: CustomAppBar(actions: [],
           pageTitle: appLocalization.myProfile,
+          leading: Container(
+            color: Colors.white,
+            width: 20.w,
+          ),
+          isLogOut: true,
         ),
         body: Container(
           margin: EdgeInsets.only(top: query.size.height * 0.05),
@@ -245,48 +251,87 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 onTap: () => Navigator.of(context)
                                     .pushNamed(AddressBookWidget.routeName),
                               ),
-                              Align(
-                                alignment: Alignment.bottomCenter,
-                                child: TextButton(
-                                  onPressed: () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text(appLocalization.deleteAccount),
-                                          content: Text(
-                                              appLocalization.sureDeleteAccount),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              child: Text(appLocalization.back),
-                                              onPressed: () {
-                                                Navigator.pop(
-                                                    context); // Close the dialog
-                                              },
+                              Padding(
+                                padding:  EdgeInsets.only(top: 40.0.h),
+                                child: Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showDialog(
+
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+
+                                            backgroundColor: Colors.white,
+                                            title: Text(appLocalization.deleteAccount,
+
                                             ),
-                                            TextButton(
-                                              child: Text(appLocalization.confirm_delete),
-                                              onPressed: () async {
-                                                userData.deleteAccount();   
-                                                auth.logout();                                                                                             
-                                                Navigator.pop(
-                                                    context); // Close the dialog
-                                              },
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  },
-                                  style: TextButton.styleFrom(
-                                    textStyle: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.red // Bold text style
+                                            content: Text(
+                                                appLocalization.sureDeleteAccount),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                child: Text(appLocalization.back
+                                                ,      style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                      color: Colors.yellow.shade700,
+                                                      fontSize: 15.sp,
+                                                      fontWeight: FontWeight.w400),
+                                                ),
+                                                onPressed: () {
+                                                  Navigator.pop(
+                                                      context); // Close the dialog
+                                                },
+                                              ),
+                                              TextButton(
+                                                child: Text(appLocalization.confirm_delete,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodySmall
+                                                      ?.copyWith(
+                                                      color: Colors.red,
+                                                      fontSize: 15.sp,
+                                                      fontWeight: FontWeight.w400),
+                                                ),
+                                                onPressed: () async {
+                                                  userData.deleteAccount();
+                                                  auth.logout();
+                                                  Navigator.pop(
+                                                      context); // Close the dialog
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: Container(
+                                      height: 60.h,
+                                      width: MediaQuery.of(context).size.width - 70,
+                                      decoration: BoxDecoration(
+                                          color:  Colors.red,
+                                       ),
+                                      child: Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Text(
+                                              appLocalization.deleteAccount,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
+                                                  color:  Colors.white,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 17.sp)),
                                         ),
+                                      ),
+                                    ),
                                   ),
-                                  child: Text(appLocalization.deleteAccount),
                                 ),
                               )
+
                             ],
                           ),
                         ),
@@ -303,15 +348,18 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       : Alignment.topRight,
                   child: Column(
                     children: [
-                      IconButton(
-                        icon: Icon(_isEditMode ? Icons.check : Icons.edit),
-                        onPressed: _isEditMode
-                            ? () {
-                                _saveChanges(appLocalization);
-                              }
-                            : () {
-                                _toggleEditMode();
-                              },
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: IconButton(
+                          icon: Icon(_isEditMode ? Icons.check : Icons.edit),
+                          onPressed: _isEditMode
+                              ? () {
+                                  _saveChanges(appLocalization);
+                                }
+                              : () {
+                                  _toggleEditMode();
+                                },
+                        ),
                       ),
                       Visibility(
                           visible: _isEditMode,

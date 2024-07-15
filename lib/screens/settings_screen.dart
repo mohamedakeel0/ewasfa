@@ -1,4 +1,4 @@
-
+import 'package:ewasfa/widgets/background_painter.dart';
 import 'package:ewasfa/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +14,7 @@ import 'package:flutter/foundation.dart';
 @Summary('The Settings Screen')
 class SettingsScreen extends StatefulWidget {
   static const routeName = '/settings';
+
   const SettingsScreen({Key? key}) : super(key: key);
 
   @override
@@ -53,7 +54,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Scaffold(
           extendBodyBehindAppBar: true,
           appBar: CustomAppBar(pageTitle: appLocalization.settings),
-          body: Container(
+          body: CustomPaint(
+            painter: BackgroundPainter(),
             child: Container(
               margin: EdgeInsets.only(top: query.size.height * 0.15),
               child: ListView(
@@ -104,41 +106,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
       List<Widget> subOptions,
       AppLocalizations appLocalization) {
     return Card(
+      color: Colors.white,
       elevation: 2.0,
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          iconTheme: IconThemeData(
-            color: Theme.of(context).iconTheme.color,
-          ),
-        ),
-        child: ExpansionPanelList(
-          expansionCallback: (int index, bool isExpanded) {
-            _toggleExpansionState(option);
-          },
-          children: [
-            ExpansionPanel(
-              canTapOnHeader: true,
-              headerBuilder: (BuildContext context, bool isExpanded) {
-                return Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: ListTile(
-                    leading: Icon(icon),
-                    title: Text(
-                        option == "Language"
-                            ? appLocalization.language
-                            : appLocalization.theme,
-                        style: Theme.of(context).textTheme.labelLarge),
-                    subtitle: Text(description),
-                  ),
-                );
-              },
-              body: Column(
-                children: subOptions,
-              ),
-              isExpanded: isExpanded,
+      child: ExpansionPanelList(
+        expansionCallback: (int index, bool isExpanded) {
+          _toggleExpansionState(option);
+        },
+        children: [
+          ExpansionPanel(
+            canTapOnHeader: true,
+            headerBuilder: (BuildContext context, bool isExpanded) {
+              return Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: ListTile(
+                  leading: Icon(icon),
+                  title: Text(
+                      option == "Language"
+                          ? appLocalization.language
+                          : appLocalization.theme,
+                      style: Theme.of(context).textTheme.labelLarge),
+                  subtitle: Text(description),
+                ),
+              );
+            },
+            body: Column(
+              children: subOptions,
             ),
-          ],
-        ),
+            isExpanded: isExpanded,
+          ),
+        ],
       ),
     );
   }
@@ -171,7 +167,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             setState(() {
               final langProv =
                   Provider.of<LanguageProvider>(context, listen: false);
-                  final authProvider = Provider.of<Auth>(context, listen: false);
+              final authProvider = Provider.of<Auth>(context, listen: false);
               langProv.changeLanguage(Language.arabic, authProvider.auth);
               appThemeProvider.toggleLanguage();
               langProv.saveLanguagePreference(Language.arabic);

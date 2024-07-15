@@ -1,7 +1,9 @@
 import 'package:ewasfa/providers/language.dart';
 import 'package:ewasfa/screens/add_new_address.dart';
+import 'package:ewasfa/widgets/background_painter.dart';
 import 'package:ewasfa/widgets/map_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:provider/provider.dart';
@@ -79,47 +81,23 @@ class _AddressBookWidgetState extends State<AddressBookWidget> {
                 )
               ],
             ),
-            body: Container(
-              // Customize the appearance of the address book widget
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(10),
-              child: ListView.builder(
-                itemCount: userAddresses.length,
-                itemBuilder: (context, index) {
-                  final address = userAddresses[index];
-                  return Card(
-                    child: ListTile(
-                      title: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _buildTitle(address, index),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: _buildSubtitle(address, index),
-                          ),
-                        ],
-                      ),
-                      trailing: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _buildTrailing(address, index),
-                      ),
-                    ),
-                  );
-                },
+            body: CustomPaint(
+              painter: BackgroundPainter(),
+              child: Container(height: MediaQuery.of(context).size.height,
+
+                padding: const EdgeInsets.all(10),
+                child: ListView.builder(
+                  itemCount: userAddresses.length,
+                  itemBuilder: (context, index) {
+                    final address = userAddresses[index];
+                    return ListTile(
+                      horizontalTitleGap: 2.0,
+                      title: _buildTitle(address, index,userAddresses),
+                      subtitle: _buildSubtitle(address, index),
+
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -128,41 +106,47 @@ class _AddressBookWidgetState extends State<AddressBookWidget> {
     );
   }
 
-  Widget _buildTitle(Address address, int index) {
+  Widget _buildTitle(Address address, int index, List<Address> addres) {
     final bool isEditable = editableIndex != null && editableIndex == index;
     return Consumer<LanguageProvider>(
       builder: (context, languageProvider, _) {
         final appLocalization = AppLocalizations.of(context)!;
         return isEditable
-            ? _buildEditableText(
+            ? _buildEditableText(addres, index,
                 address.addressLine, address.city, address.landmark)
-            : SizedBox(
-              height: 75,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      child: Text(
-                        appLocalization.city,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+            : Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+
+                SizedBox(height: 40.h,
+                  width: 100.w,
+                  child: Text(
+                    appLocalization.city,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
                     ),
-                    Expanded(
-                      child: Text(
-                        address.city,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
+                Padding(
+                  padding:  EdgeInsets.only(bottom: 10.0.h),
+                  child: Expanded(
+                    child: Text(
+                      address.city,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding:  EdgeInsets.only(bottom: 10.0.h),
+                  child: _buildTrailing(address, index),
+                )
+              ],
             );
       },
     );
   }
 
-  void _useLocationData() async {
+  void useLocationData(   List<Address> address,int index,) async {
     if (addressData["longitude"] != 0.0 && addressData["latitude"] != 0.0) {
       final retrievedAddress = await LocationHelper.getPlaceAddress(
           addressData["latitude"] as double,
@@ -176,9 +160,12 @@ class _AddressBookWidgetState extends State<AddressBookWidget> {
         _addressController.text = retrievedAddress;
         addressData["city"] = retrievedCity;
         _cityController.text = retrievedCity;
+        address[index].addressLine=retrievedAddress;
+        address[index].city=retrievedCity;
         print("Retrieved: ${retrievedAddress} and ${retrievedCity}");
         print(
             "Controllers: ${_addressController.text} and ${_cityController.text}");
+        editableIndex = null;
       });
     }
   }
@@ -187,86 +174,116 @@ class _AddressBookWidgetState extends State<AddressBookWidget> {
     return Consumer<LanguageProvider>(
       builder: (context, languageProvider, _) {
         final appLocalization = AppLocalizations.of(context)!;
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (!isEditable(index)) ...[
-              const SizedBox(height: 8),
-              SizedBox(
-                height: 100,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 100,
-                      child: Flex(
-                        direction: Axis.horizontal,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              maxLines: 1,
-                              overflow: TextOverflow.visible,
-                              appLocalization.addressLine,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+        return      Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+
+              if (!isEditable(index)) ...[
+
+                SizedBox(
+                  height: 60.h,
+                  width: MediaQuery.of(context).size.width,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          maxLines: 1,
+                          overflow: TextOverflow.visible,
+                          appLocalization.addressLine,
+                          style:  TextStyle(
+                            fontWeight: FontWeight.bold,
+                              fontSize: 15.sp,
+                              color: Colors.black
                           ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Flex(
-                        direction: Axis.horizontal,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              maxLines: 2,
-                              address.addressLine,
-                              style: Theme.of(context).textTheme.bodySmall,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 8),
-              SizedBox(
-                height: 65,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 100,
-                      child: Text(
-                        maxLines: 1,
-                        overflow: TextOverflow.visible,
-                        appLocalization.landmark,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Flex(direction: Axis.horizontal, children: [
-                        Expanded(
+
+                      Expanded(
+                        child: Text(
+                          maxLines: 3,
+                          address.addressLine,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontSize: 14.sp,
+                            color: Colors.black
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  height: 65.h,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 100.w,
+                        child: Text(
+                          maxLines: 1,
+                          overflow: TextOverflow.visible,
+                          appLocalization.landmark,
+                          style:  TextStyle(
+                            fontWeight: FontWeight.bold,
+                              fontSize: 15.sp,
+                              color: Colors.black
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5.0),
+                        child: Expanded(
                           child: Text(
                             maxLines: 2,
                             address.landmark,
-                            style: Theme.of(context).textTheme.bodySmall,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                fontSize: 15.sp,
+                                color: Colors.black
+                            ),
                           ),
                         ),
-                      ]),
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                const SizedBox(height: 8),
+                Center(
+                  child: GestureDetector(
+                    onTap:() {
+
+                    },
+                    child: Container(
+                      height: 55.h,
+                      width: MediaQuery.of(context).size.width - 150,
+                      decoration: BoxDecoration(
+                        color:  Colors.black,
+                      ),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                              appLocalization.useLocationData,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                  color:  Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 17.sp)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         );
       },
     );
@@ -387,6 +404,7 @@ class _AddressBookWidgetState extends State<AddressBookWidget> {
   }
 
   Widget _buildEditableText(
+      List<Address> address,int index,
     String initialAddress,
     String initialCity,
     String initialLandmark,
@@ -491,15 +509,34 @@ class _AddressBookWidgetState extends State<AddressBookWidget> {
                 ),
                 Visibility(
                   visible: selectedLocation.latitude != 0.0,
-                  child: TextButton(
-                    onPressed: _useLocationData,
-                    child: Text(appLocalization.useLocationData,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: primarySwatch.shade500,
-                            )),
+                  child: GestureDetector(
+                    onTap:() {
+                      useLocationData(address,index);
+                    },
+                    child: Container(
+                      height: 55.h,
+                      width: MediaQuery.of(context).size.width - 70,
+                      decoration: BoxDecoration(
+                        color:  Colors.black,
+                      ),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                              appLocalization.useLocationData,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                  color:  Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 17.sp)),
+                        ),
+                      ),
+                    ),
                   ),
-                )
+                ),
+
               ],
             )
           ],

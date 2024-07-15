@@ -7,9 +7,9 @@ class Address{
   final int id;
   final double latitude;
   final double longitude;
-  final String city;
+  late  String city;
   final String landmark;
-  final String addressLine;
+  late  String addressLine;
 
   Address({  required this.id, required this.city, required this.landmark, required this.latitude, required this.longitude, required this.addressLine});
 }

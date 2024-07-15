@@ -135,11 +135,26 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                                                         .textTheme
                                                         .titleMedium,
                                                   ),
-                                                  subtitle: Text(
-                                                    notification['body'],
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .bodySmall,
+                                                  subtitle: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Padding(
+                                                        padding:  EdgeInsets.symmetric(vertical: 8.0.h),
+                                                        child: Text(
+                                                          notification['body'],
+                                                          style: Theme.of(context)
+                                                              .textTheme
+                                                              .bodySmall,
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:  EdgeInsets.symmetric(vertical: 8.0.h),
+                                                        child: Text(
+                                                          '${appLocalization.date} ${notification['created_at']} ',
+                                                          style:
+                                                          Theme.of(context).textTheme.bodySmall,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
                                               ),

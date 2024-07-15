@@ -16,8 +16,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   TabBar? tabBar;
   List<Widget>? actions;
 Widget? leading;
+bool? isLogOut;
 
-  CustomAppBar({super.key, required this.pageTitle, this.leading, this.tabBar, this.actions});
+  CustomAppBar({super.key, required this.pageTitle,  this.isLogOut=false, this.leading, this.tabBar, this.actions});
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +48,9 @@ Widget? leading;
               ),
               actions: actions == null
                   ? []
-                  : [
+                  : isLogOut==true? [
                       ...?actions,
-                      PopupMenuButton(
+                 PopupMenuButton(
                         icon: Icon(Icons.more_vert,
                             color: Theme.of(context).iconTheme.color),
                         itemBuilder: (BuildContext context) {
@@ -93,7 +94,7 @@ Widget? leading;
                           }
                         },
                       ),
-                    ],
+                    ]:actions,
             ),
           ),
         ),

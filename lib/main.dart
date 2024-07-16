@@ -136,7 +136,7 @@ void main() async {
 
   const InitializationSettings initializationSettings = InitializationSettings(
     android: AndroidInitializationSettings(
-        '@ic_launcher'), // Replace with your launcher icon
+        'ic_launcher'), // Replace with your launcher icon
   );
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
@@ -168,8 +168,10 @@ Future<void> showNotification(RemoteMessage message) async {
 
   const AndroidNotificationDetails androidPlatformChannelSpecifics =
       AndroidNotificationDetails(
+
           'flutter_notification', // id
           'flutter_notification_title', // title
+          icon: "ic_launcher",
           importance: Importance.high,
           enableLights: true,
           enableVibration: true,

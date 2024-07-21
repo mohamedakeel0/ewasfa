@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.1+3
 
 environment:
-  sdk: '>=3.4.1 <4.0.0'
+  sdk: '>=3.2.3 <4.0.0'
 
 
 # Dependencies specify other packages that your package needs in order to work.
@@ -34,29 +34,29 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
-  provider: ^6.0.5
-  http: ^1.2.2
-  firebase_core: ^2.24.2
-  cupertino_icons: ^1.0.2
-  shared_preferences: ^2.1.0
-  page_transition: ^2.0.9
-  loading_indicator: ^3.1.0
-  carousel_slider: ^4.2.1
-  cached_network_image: ^3.2.3
-  logger: ^2.4.0
-  image_picker: ^1.1.2
-  connectivity: ^3.0.6
+  provider:
+  http:
+  firebase_core:
+  cupertino_icons:
+  shared_preferences:
+  page_transition:
+  loading_indicator:
+  carousel_slider:
+  cached_network_image:
+  logger:
+  image_picker:
+  connectivity:
   firebase_messaging:
-  latlong2: ^0.9.1
-  location: ^6.0.2
-  google_maps_flutter: ^2.2.6
-  floating_bottom_bar: ^0.0.2
-  curved_labeled_navigation_bar: ^2.0.2
-  flutter_local_notifications: ^17.2.1+2
-  flutter_launcher_icons: ^0.13.1
-  fluttertoast: ^8.0.8
-  flutter_polyline_points: ^2.1.0
-  android_intent_plus: ^5.0.2
+  latlong2:
+  location:
+  google_maps_flutter:
+  floating_bottom_bar:
+  curved_labeled_navigation_bar:
+  flutter_local_notifications:
+  flutter_launcher_icons:
+  fluttertoast:
+  flutter_polyline_points:
+  android_intent_plus: ^3.1.9
   flutter_screenutil:
 flutter_launcher_icons:
   image_path_android: "lib/assets/images/logo_x3.png"

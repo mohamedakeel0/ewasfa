@@ -124,7 +124,7 @@ class Addresses with ChangeNotifier {
         // Address successfully deleted
         Fluttertoast.showToast(msg: appLocalization.addressDeletedMsg,toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,);
-        logger.v("Address deleted by addressesProvider", addressId);
+
         addresses.removeWhere((address) => address.id == addressId);
         notifyListeners();
       } else {
@@ -163,7 +163,7 @@ class Addresses with ChangeNotifier {
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
         );
-        logger.v("Address updated by addressesProvider", id.toString());
+
         final updatedAddressIndex =
         addresses.indexWhere((address) => address.id == int.parse(id));
         if (updatedAddressIndex != null && updatedAddressIndex >= 0) {

@@ -947,63 +947,64 @@ class _NewOrderScreenState extends State<NewOrderScreen> {
                                       }
                                     })),
                                 Center(
-                                  child: Visibility(
-                                    visible:
-                                        _branchSelected && _images.isNotEmpty,
-                                    child: GestureDetector(
-                                      onTap: _isLoading==true?null:() {
+                                  child: _isLoading?SizedBox(
+                                    height: 80.h,
+                                    child: const LoadingIndicator(
+                                        indicatorType: Indicator.ballBeat,
+                                        colors: [primarySwatch]),
+                                  ):GestureDetector(
+                                    onTap: _isLoading==true?null:() {
 
 
-                                        int userId = userid;
-                                        //String imagePath = _images?.first.path ?? '';
-                                        String promoCode =
-                                            _promoCodeController.text;
-                                        int referredUserId = 0;
-                                        Map<String, dynamic> requestBody = {
-                                          'user_id': userId,
-                                          'promo_code': promoCode,
-                                          'address_id':
-                                              selectedPharmacy.address.id,
-                                          'branch_id': selectedPharmacy.id,
-                                          'address': selectedPharmacy
-                                              .address.addressLine,
-                                          'city': selectedPharmacy.address.city,
-                                          'long': selectedPharmacy
-                                              .address.longitude,
-                                          'lat':
-                                              selectedPharmacy.address.latitude,
-                                          'land_mark':
-                                              selectedPharmacy.address.landmark,
-                                          'refered': referredUserId,
-                                        };
-                                        makeOrderRequest(requestBody, _images);
-                                      },
-                                      child: Container(
-                                        height: 60.h,
-                                        width:
-                                            MediaQuery.of(context).size.width -
-                                                150,
-                                        decoration: BoxDecoration(
-                                          color: Colors.black,
-                                        ),
-                                        child: Center(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: Text(
-                                                appLocalization.placeOrder,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium
-                                                    ?.copyWith(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w600,
-                                                        fontSize: 17.sp)),
-                                          ),
+                                      int userId = userid;
+                                      //String imagePath = _images?.first.path ?? '';
+                                      String promoCode =
+                                          _promoCodeController.text;
+                                      int referredUserId = 0;
+                                      Map<String, dynamic> requestBody = {
+                                        'user_id': userId,
+                                        'promo_code': promoCode,
+                                        'address_id':
+                                            selectedPharmacy.address.id,
+                                        'branch_id': selectedPharmacy.id,
+                                        'address': selectedPharmacy
+                                            .address.addressLine,
+                                        'city': selectedPharmacy.address.city,
+                                        'long': selectedPharmacy
+                                            .address.longitude,
+                                        'lat':
+                                            selectedPharmacy.address.latitude,
+                                        'land_mark':
+                                            selectedPharmacy.address.landmark,
+                                        'refered': referredUserId,
+                                      };
+                                      makeOrderRequest(requestBody, _images);
+                                    },
+                                    child: Container(
+                                      height: 60.h,
+                                      width:
+                                          MediaQuery.of(context).size.width -
+                                              150,
+                                      decoration: BoxDecoration(
+                                        color: Colors.black,
+                                      ),
+                                      child: Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Text(
+                                              appLocalization.placeOrder,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium
+                                                  ?.copyWith(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 17.sp)),
                                         ),
                                       ),
                                     ),
-                                  ),
+                                  ) ,
                                 )
                               ]))),
                 )));

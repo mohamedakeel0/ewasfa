@@ -114,34 +114,37 @@ class _AddressBookWidgetState extends State<AddressBookWidget> {
         return isEditable
             ? _buildEditableText(addres, index,
                 address.addressLine, address.city, address.landmark)
-            : Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-
-                SizedBox(height: 40.h,
-                  width: 100.w,
-                  child: Text(
-                    appLocalization.city,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+            :
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 40.h,
+              width: 100.w,
+              child: Text(
+                appLocalization.city,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
                 ),
-                Padding(
-                  padding:  EdgeInsets.only(bottom: 10.0.h),
-                  child: Expanded(
-                    child: Text(
-                      address.city,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ),
+              ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 10.0.h),
+                child: Text(
+                  address.city,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                Padding(
-                  padding:  EdgeInsets.only(bottom: 10.0.h),
-                  child: _buildTrailing(address, index),
-                )
-              ],
-            );
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 10.0.h),
+              child: _buildTrailing(address, index),
+            ),
+          ],
+        )
+        ;
       },
     );
   }
@@ -195,27 +198,30 @@ class _AddressBookWidgetState extends State<AddressBookWidget> {
                           maxLines: 1,
                           overflow: TextOverflow.visible,
                           appLocalization.addressLine,
-                          style:  TextStyle(
+                          style: TextStyle(
                             fontWeight: FontWeight.bold,
-                              fontSize: 15.sp,
-                              color: Colors.black
+                            fontSize: 15.sp,
+                            color: Colors.black,
                           ),
                         ),
                       ),
-
                       Expanded(
-                        child: Text(
-                          maxLines: 3,
-                          address.addressLine,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: Text(
+                            maxLines: 2,
+                            address.addressLine,
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               fontSize: 14.sp,
-                            color: Colors.black
+                              color: Colors.black,
+                            ),
                           ),
                         ),
                       ),
                     ],
                   ),
-                ),
+                )
+                ,
                 const SizedBox(height: 8),
                 SizedBox(
                   height: 65.h,
@@ -236,9 +242,9 @@ class _AddressBookWidgetState extends State<AddressBookWidget> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Expanded(
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
                           child: Text(
                             maxLines: 2,
                             address.landmark,

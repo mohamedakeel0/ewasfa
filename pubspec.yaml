@@ -58,6 +58,7 @@ dependencies:
   flutter_polyline_points:
   android_intent_plus: ^3.1.9
   flutter_screenutil:
+  flutter_svg:
 flutter_launcher_icons:
   image_path_android: "lib/assets/images/logo_x3.png"
   image_path_ios: "lib/assets/images/logo_x3.png"
@@ -92,6 +93,7 @@ flutter:
   assets:
      - lib/assets/images/
      - lib/assets/images/logo_main.png
+     - lib/assets/images/logo_app.svg
      - lib/assets/images/logo_x0.5.png
      - lib/assets/images/logo_x0.75.png
      - lib/assets/images/logo_x0.25.png

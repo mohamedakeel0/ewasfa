@@ -297,9 +297,8 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                                 ),
                                                 onPressed: () async {
                                                   userData.deleteAccount();
-                                                  auth.logout();
-                                                  Navigator.pop(
-                                                      context); // Close the dialog
+                                                  auth.logout(context);
+                                            // Close the dialog
                                                 },
                                               ),
                                             ],

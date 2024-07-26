@@ -2,6 +2,7 @@ import 'package:ewasfa/widgets/background_painter.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 @Category(<String>['Screens'])
 @Summary('The Screen that displays at the application startup')
@@ -22,12 +23,13 @@ class SplashScreen extends StatelessWidget {
                 width: query.size.width * 0.6,
                 height: query.size.height * 0.4,
                 child: Image.asset(
-                  "lib/assets/images/logo_main.png",
-                  fit: BoxFit.contain,
+                  width: query.size.width * 0.6,
+                  height: query.size.height * 0.4,
+                  "lib/assets/images/logo_x4.png",
+                  fit: BoxFit.fill,
                 ),
               ),
               const SizedBox(height: 16),
-
             ],
           ),
         ),

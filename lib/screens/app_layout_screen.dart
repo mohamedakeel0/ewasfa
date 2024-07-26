@@ -145,7 +145,7 @@ class _AppLayoutScreenState extends State<AppLayoutScreen> {
                                   onPressed: () {
                                     Navigator.pop(
                                         context);
-                                    auth.logout(); // Navigate to login screen
+                                    auth.logout(context); // Navigate to login screen
                                   },
                                 ),
                               ],

@@ -32,7 +32,7 @@ class _SplashAuthScreenState extends State<SplashAuthScreen> {
                 child: SizedBox(
                   height: 300.h,
                   child: Image.asset(
-                    "lib/assets/images/logo_x0.25.png",
+                    "lib/assets/images/logo_x4.png",
                     fit: BoxFit.fill,
                   ),
                 ),

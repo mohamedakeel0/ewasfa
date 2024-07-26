@@ -212,7 +212,7 @@ class _AuthCardState extends State<AuthCard>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(top: 20.0.h),
+                    padding: EdgeInsets.only(top: _authMode == AuthMode.signUp?0.0.h:20.h),
                     child: CustomTextFormField(
                       enabledBorder: InputBorder.none,
                       onSaved: (value) {
@@ -480,46 +480,49 @@ class _AuthCardState extends State<AuthCard>
                                           fontSize: 17.sp)),
                             )
                           : null),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30.w, vertical: 30.h),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(AppLocalizations.of(context)!.dont_have_an_account,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyLarge
-                                ?.copyWith(
-                                    color: Color(0xFF828282),
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 17.sp)),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            textStyle: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                          ),
-                          onPressed: _switchAuthMode,
-                          child: Text(
-                              _authMode == AuthMode.login
-                                  ? AppLocalizations.of(context)!
-                                      .signup_button_label
-                                  : AppLocalizations.of(context)!
-                                      .login_button_label,
+                  Center(
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: _authMode == AuthMode.login?55.w:40.w,
+                              vertical:_authMode == AuthMode.login? 25.h:0.h),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(AppLocalizations.of(context)!.dont_have_an_account,
                               style: Theme.of(context)
                                   .textTheme
-                                  .bodyMedium!
-                                  .copyWith(
-                                      color: Colors.black,
+                                  .bodyLarge
+                                  ?.copyWith(
+                                      color: Color(0xFF828282),
                                       fontWeight: FontWeight.w600,
                                       fontSize: 17.sp)),
-                        ),
-                      ],
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              textStyle: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                            ),
+                            onPressed: _switchAuthMode,
+                            child: Text(
+                                _authMode == AuthMode.login
+                                    ? AppLocalizations.of(context)!
+                                        .signup_button_label
+                                    : AppLocalizations.of(context)!
+                                        .login_button_label,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 17.sp)),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ]),
@@ -567,9 +570,9 @@ class AuthScreen extends StatelessWidget {
                         children: <Widget>[
                           Padding(
                             padding:
-                                const EdgeInsets.only(top: 60.0, bottom: 20),
+                                const EdgeInsets.only(top: 60.0, bottom: 10),
                             child: SizedBox(
-                              height: 150.h,
+                              height: 140.h,
                               child: Image.asset(
                                 "lib/assets/images/logo_x0.25.png",
                                 fit: BoxFit.fill,

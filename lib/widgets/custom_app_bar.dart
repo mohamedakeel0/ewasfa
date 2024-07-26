@@ -87,7 +87,7 @@ bool? isLogOut;
                         },
                         onSelected: (value) {
                           if (value == 'Logout') {
-                            Provider.of<Auth>(context, listen: false).logout();
+                            Provider.of<Auth>(context, listen: false).logout(context);
                           } else if (value == "Settings") {
                             Navigator.of(context)
                                 .pushNamed(SettingsScreen.routeName);

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 
 import 'package:ewasfa/screens/app_layout_screen.dart';
+import 'package:ewasfa/screens/auth_screen.dart';
 import 'package:ewasfa/screens/home_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -360,7 +361,7 @@ class Auth with ChangeNotifier {
   }
 
   /// Clears authentication data from the app and SharedPreferences, then notifies listeners, causing logout
-  Future<void> logout() async {
+  Future<void> logout(con) async {
     _userId = -1;
     auth = false;
     subauth = false;
@@ -368,7 +369,11 @@ class Auth with ChangeNotifier {
     notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     //prefs.remove('userData');
+
     prefs.clear();
+    Navigator.of(con).pushAndRemoveUntil(MaterialPageRoute(
+        builder: (context) => AuthScreen(AuthMode.login)), (route) => false);
+
   }
 
   /// Returns the user authentication token if it's not expired or nonexistent

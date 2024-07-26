@@ -204,6 +204,7 @@ class MyApp extends StatelessWidget {
         builder: (context, child) {
           return const MaterialApp(
             debugShowCheckedModeBanner: false,
+
             title: appName,color: Colors.white,
             home: MyHomePage(),
           );
@@ -274,7 +275,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           languageProvider.currentLanguage == Language.arabic
                               ? const Locale('ar')
                               : const Locale('en'),
-                      child: MaterialApp(color: Colors.white,
+                      child: MaterialApp(
+                          color: Colors.white,
                           debugShowCheckedModeBanner: false,
                           locale: languageProvider.currentLanguage ==
                                   Language.arabic
@@ -292,7 +294,11 @@ class _MyHomePageState extends State<MyHomePage> {
                           ],
                           theme: Provider.of<AppTheme>(ctx)
                               .currentTheme
-                              .copyWith(useMaterial3: false,backgroundColor: Colors.white,scaffoldBackgroundColor: Colors.white,
+                              .copyWith
+                            (useMaterial3: false,
+                              backgroundColor: Colors.white,
+                              scaffoldBackgroundColor: Colors.white,
+
                                   pageTransitionsTheme: PageTransitionsTheme(
                                     builders: {
                                       TargetPlatform.android:
@@ -320,7 +326,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           title: 'Ewasfa',
                           routes: routingTable,
                           home: auth.isAuth
-                              ? Scaffold(
+                              ? Scaffold(backgroundColor: Colors.yellow.shade300,
                                   body: pages[_selectedPageIndex]['page']
                                       as Widget,
                                   bottomNavigationBar: Directionality(
@@ -406,7 +412,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                         onPressed: () {
                                                           Navigator.pop(
                                                               context);
-                                                          auth.logout(); // Navigate to login screen
+                                                          auth.logout(context); // Navigate to login screen
                                                         },
                                                       ),
                                                     ],

@@ -162,7 +162,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
     return Scaffold(
       appBar: CustomAppBar(
-        pageTitle: 'Reset Password',
+        pageTitle: AppLocalizations.of(context)!.resetPassword,
       ),
       body: CustomPaint(
         painter: BackgroundPainter(),

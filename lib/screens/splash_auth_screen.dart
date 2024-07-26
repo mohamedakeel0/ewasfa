@@ -55,7 +55,7 @@ class _SplashAuthScreenState extends State<SplashAuthScreen> {
                         border: Border.all(color: Colors.black, width: 3)),
                     child: Center(
                       child: Padding(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(5.0),
                         child: Text(
                             AppLocalizations.of(context)!.signup_button_label,
                             style: Theme.of(context)
@@ -88,7 +88,7 @@ class _SplashAuthScreenState extends State<SplashAuthScreen> {
                         border: Border.all(color: Colors.black, width: 3)),
                     child: Center(
                       child: Padding(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: const EdgeInsets.all(5.0),
                         child: Text(
                             AppLocalizations.of(context)!.login_button_label,
                             style: Theme.of(context)

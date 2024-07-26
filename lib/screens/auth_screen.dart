@@ -426,7 +426,7 @@ class _AuthCardState extends State<AuthCard>
                                   Border.all(color: Colors.black, width: 3)),
                           child: Center(
                             child: Padding(
-                              padding: const EdgeInsets.all(10.0),
+                              padding: const EdgeInsets.all(5.0),
                               child: Text(
                                   _authMode == AuthMode.login
                                       ? AppLocalizations.of(context)!
